@@ -1,19 +1,21 @@
 package store.View.gui;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import store.Model.products.Product;
-public class StoreWindow {
-    private List<Product> products;
 
-    public StoreWindow(List<Product> products) {
-       this.products = new ArrayList<>(products);
-        GridLayout myGridLayout = new GridLayout(this.products.size()/3, 3);
+public class StoreWindow extends JPanel {
 
+    public StoreWindow() {
+        setLayout(new GridLayout(2,6,10,10));
+        setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-
-
+        // דוגמה זמנית – בלי Model
+        add(new JLabel("Product 1"));
+        add(new JLabel("Product 2"));
+        add(new JLabel("Product 3"));
+        add(new JLabel("Product 4"));
+        add(new JLabel("Product 5"));
+        add(new JLabel("Product 6"));
     }
 
 }
