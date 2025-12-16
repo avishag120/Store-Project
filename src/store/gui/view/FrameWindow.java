@@ -1,4 +1,4 @@
-package store.View.gui;
+package store.gui.view;
 
 import javax.swing.*;
 import java.awt.*;

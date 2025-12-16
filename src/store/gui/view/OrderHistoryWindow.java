@@ -1,4 +1,4 @@
-package store.View.gui;
+package store.gui.view;
 
 public class OrderHistoryWindow {
 }
