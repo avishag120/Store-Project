@@ -1,5 +1,8 @@
 package store.gui.view;
 
+import store.Model.products.Category;
+import store.Model.products.Product;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,16 +16,22 @@ public class StoreWindow extends JPanel {
     }
     public void showAllProducts() {
         removeAll();
-        // דוגמה זמנית
-        add(new JLabel("Product 1"));
-        add(new JLabel("Product 2"));
-        add(new JLabel("Product 3"));
-        add(new JLabel("Product 4"));
-        add(new JLabel("Product 5"));
-        add(new JLabel("Product 6"));
+
+        JButton productButton = new JButton("Product 1");
+
+        productButton.addActionListener(e -> {
+            JFrame detailsFrame = new JFrame("Product Details");
+            detailsFrame.add(new ProductDetailsPanel());
+            detailsFrame.setSize(300, 200);
+            detailsFrame.setVisible(true);
+        });
+
+        add(productButton);
+
         revalidate();
         repaint();
     }
+
 
     // מציג תוצאת חיפוש דוגמא
     public void showSearchResult(String text) {
@@ -46,6 +55,28 @@ public class StoreWindow extends JPanel {
         revalidate();
         repaint();
     }
+    private void openProductDetails() {
+        JFrame detailsFrame = new JFrame("Product Details");
+        ProductDetailsPanel panel = new ProductDetailsPanel();
+
+        // מוצר זמני – רק כדי שה־GUI יעבוד
+        Product product = new Product(
+                "Product 1",
+                100,
+                20,
+                "Nice product",
+                Category.CLOTHING,
+                Color.BLUE
+        ) {};
+
+        panel.showProduct(product);
+
+        detailsFrame.add(panel);
+        detailsFrame.pack();
+        detailsFrame.setLocationRelativeTo(this);
+        detailsFrame.setVisible(true);
+    }
+
 
 
 }
