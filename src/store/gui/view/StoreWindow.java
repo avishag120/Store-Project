@@ -7,8 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class StoreWindow extends JPanel {
+    private ProductDetailsPanel detailsPanel;
 
-    public StoreWindow() {
+
+    public StoreWindow(ProductDetailsPanel detailsPanel) {
+        this.detailsPanel = detailsPanel;
         setLayout(new GridLayout(2,6,10,10));
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         showAllProducts();
@@ -76,6 +79,10 @@ public class StoreWindow extends JPanel {
         detailsFrame.setLocationRelativeTo(this);
         detailsFrame.setVisible(true);
     }
+    public void showProductDetails(Product p) {
+        detailsPanel.showProduct(p);
+    }
+
 
 
 

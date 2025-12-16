@@ -1,10 +1,13 @@
 package store.gui.controler;
 import javax.swing.*;
 import java.io.File;
+
+import store.Model.products.Product;
 import store.gui.view.StoreWindow;
 
 public class StoreController {
     private StoreWindow storeWindow;
+
     public StoreController(StoreWindow storeWindow) {
         this.storeWindow = storeWindow;
     }
@@ -33,5 +36,8 @@ public class StoreController {
             File file = chooser.getSelectedFile();
             storeWindow.showSaveMessage(file.getName());
         }
+    }
+    public void productSelected(Product product) {
+        storeWindow.showProductDetails(product);
     }
 }
