@@ -31,6 +31,6 @@ public class ProductDetailsPanel extends JPanel {
         nameLabel.setText("Name: " + p.getDisplayName());
         priceLabel.setText("Price: " + p.getPrice());
         stockLabel.setText("Stock: " + p.getStock());
-        descriptionArea.setText(p.getDisplayDetails());
+        descriptionArea.setText(p.getDescription());
     }
 }

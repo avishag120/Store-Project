@@ -11,22 +11,23 @@ public class FrameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900,600);
         setLayout(new BorderLayout());
+
         ProductDetailsPanel detailsPanel = new ProductDetailsPanel();
-        add(detailsPanel, BorderLayout.EAST);
+        detailsPanel.setPreferredSize(new Dimension(180, 180));
+        JPanel rightWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        rightWrapper.add(detailsPanel);
+
+        add(rightWrapper, BorderLayout.EAST);
         StoreWindow storePanel = new StoreWindow(detailsPanel);
-        StoreController controller = new StoreController(storePanel);
         add(storePanel, BorderLayout.CENTER);
 
+        StoreController controller = new StoreController(storePanel);
+        storePanel.setController(controller);
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         JTextField searchField = new JTextField(20);
         JButton searchButton = new JButton("Search");
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
-
-        add(searchPanel, BorderLayout.NORTH);
-
         JButton loadButton = new JButton("Load");
         JButton saveButton = new JButton("Save");
 
@@ -49,9 +50,7 @@ public class FrameWindow extends JFrame {
         searchPanel.add(loadButton);
         searchPanel.add(saveButton);
 
-
-
-
+        add(searchPanel,BorderLayout.NORTH);
     }
 
 

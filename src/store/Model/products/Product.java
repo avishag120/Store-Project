@@ -134,6 +134,10 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
         return this.name.equals(other.name) &&
                 this.category == other.category;
     }
+    public String getDescription(){
+            return description;
+    }
+
 
 
 
