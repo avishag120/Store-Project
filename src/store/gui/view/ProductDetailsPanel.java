@@ -11,20 +11,31 @@ public class ProductDetailsPanel extends JPanel {
     private JLabel priceLabel=new JLabel();
     private JLabel stockLabel=new JLabel();
     private JTextArea descriptionArea=new JTextArea();
+    private JLabel imageLabel=new JLabel();
+    private JButton addToCartButton=new JButton("Add to cart");
+
 
     public ProductDetailsPanel() {
-        setLayout(new BorderLayout(10, 10));
+        JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+
         descriptionArea.setEditable(false);
         descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
 
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        JPanel topPanel = new JPanel(new GridLayout(3, 1));
-        topPanel.add(nameLabel);
-        topPanel.add(priceLabel);
-        topPanel.add(stockLabel);
+        content.add(nameLabel);
+        content.add(priceLabel);
+        content.add(stockLabel);
 
-        add(topPanel, BorderLayout.NORTH);
-        add(new JScrollPane(descriptionArea), BorderLayout.CENTER);
+        content.add(Box.createVerticalStrut(8));
+        content.add(new JScrollPane(descriptionArea));
+        content.add(Box.createVerticalStrut(8));
+
+        content.add(addToCartButton);
+
+        add(content);
     }
 
     public void showProduct(Product p) {
@@ -32,5 +43,10 @@ public class ProductDetailsPanel extends JPanel {
         priceLabel.setText("Price: " + p.getPrice());
         stockLabel.setText("Stock: " + p.getStock());
         descriptionArea.setText(p.getDescription());
+        ImageIcon icon = new ImageIcon(
+                getClass().getClassLoader().getResource("images/tshirt.png")
+        );
+        imageLabel.setIcon(icon);
+
     }
 }

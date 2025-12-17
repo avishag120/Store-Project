@@ -19,14 +19,17 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
     private String description;
     private Category category;
     private Color color;
+    private String imagePath;
 
-    public  Product(String name, double price, int stock, String description, Category category, Color color) {
+
+    public  Product(String name, double price, int stock, String description, Category category, Color color,String imagePath) {
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.description = description;
         this.category = category;
         this.color = color;
+        this.imagePath=imagePath;
     }
     /**
      * Returns the product price.
@@ -136,6 +139,9 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
     }
     public String getDescription(){
             return description;
+    }
+    public String getImagePath(){
+            return imagePath;
     }
 
 

@@ -26,8 +26,8 @@ public class ClothingProduct extends Product {
      * @param size clothing size
      */
 
-    public  ClothingProduct(String name, double price, int stock, String description, Category category, Color color, String size) {
-        super(name, price, stock, description, category, color);
+    public  ClothingProduct(String name, double price, int stock, String description, Category category, Color color, String size,String imagePath) {
+        super(name, price, stock, description, category, color,imagePath);
         this.size = size;
 
     }

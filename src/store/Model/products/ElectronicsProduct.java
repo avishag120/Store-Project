@@ -6,6 +6,9 @@
 package store.Model.products;
 
 import java.awt.*;
+import store.Model.products.Category;
+
+
 /**
  * A product that represents an electronic item in the store.
  * Adds brand and warranty information that are specific to electronics.
@@ -25,8 +28,8 @@ public class ElectronicsProduct extends Product{
      * @param warrantMonths warranty length in months
      * @param brand brand name
      */
-    public  ElectronicsProduct(String name, double price, int stock, String description, Category category, Color color,int warrantMonths, String brand) {
-        super(name, price, stock, description, category, color);
+    public  ElectronicsProduct(String name, double price, int stock, String description, Category category, Color color,int warrantMonths, String brand,String imagePath) {
+        super(name, price, stock, description, category, color,imagePath);
         this.warrantMonths = warrantMonths;
         this.brand = brand;
     }

@@ -21,7 +21,8 @@ public class MainTest extends JFrame {
                 Category.BOOKS,
                 Color.BLUE,
                 "Robert C. Martin",
-                464
+                464,
+                "images/cleancode.png"
         );
 
         ElectronicsProduct ep = new ElectronicsProduct(
@@ -32,7 +33,8 @@ public class MainTest extends JFrame {
                 Category.ELECTRONICS,
                 Color.BLACK,
                 24,
-                "Apple"
+                "Apple",
+                "images/iphone.png"
         );
 
         ClothingProduct cp = new ClothingProduct(
@@ -42,7 +44,9 @@ public class MainTest extends JFrame {
                 "Cotton unisex t-shirt",
                 Category.CLOTHING,
                 Color.RED,
-                "M"
+                "M",
+                "images/tshirt.png"
+
         );
 
         List<Product> products = new ArrayList<>();

@@ -5,6 +5,8 @@
  */
 package store.Model.products;
 import java.awt.*;
+import  store.Model.products.Product;
+
 /**
  * A product that represents a book in the store.
  * Adds book-specific fields such as author and number of pages.
@@ -27,8 +29,8 @@ public class BookProduct extends Product {
      * @param page number of pages in the book
      */
 
-    public BookProduct(String name, double price, int stock, String description, Category category, Color color,String author, int page) {
-        super(name, price, stock, description, category, color);
+    public BookProduct(String name, double price, int stock, String description, Category category, Color color,String author, int page,String imagePath) {
+        super(name, price, stock, description, category, color,imagePath);
         this.author = author;
         this.page = page;
     }

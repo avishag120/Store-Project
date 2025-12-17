@@ -25,7 +25,8 @@ public class StoreController {
                         "Blue cotton shirt",
                         store.Model.products.Category.CLOTHING,
                         java.awt.Color.BLUE,
-                        "M"
+                        "M" ,
+                        "images/tshirt.png"
                 )
         );
     }
