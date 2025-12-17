@@ -40,29 +40,28 @@ public class StoreController {
                         "CSV files", "csv"
                 )
         );
-
         int result = chooser.showOpenDialog(frame);
         if (result != JFileChooser.APPROVE_OPTION) {
             return;
         }
-
         File file = chooser.getSelectedFile();
-
-        // ניקוי מוצרים קודמים
-        engine.getAllProducts().clear();
-
+        engine.clearProducts();
         try (Scanner sc = new Scanner(file)) {
 
-            // דילוג על שורת כותרת
             if (sc.hasNextLine()) {
                 sc.nextLine();
             }
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
                 String[] parts = line.split(",");
 
-                // name,price,stock,description,category,imagePath
+                if (parts.length < 6) {
+                    continue;
+                }
                 String name = parts[0];
                 double price = Double.parseDouble(parts[1]);
                 int stock = Integer.parseInt(parts[2]);
@@ -130,10 +129,10 @@ public class StoreController {
             );
 
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(
                     frame,
-                    "Error loading file"
-            );
+                    e.toString() );
         }
     }
     public void save(JFrame frame) {
@@ -151,4 +150,24 @@ public class StoreController {
     public void productSelected(Product product) {
         storeWindow.showProductDetails(product);
     }
+    public void filterByCategory(String categoryText) {
+
+        if (categoryText.equals("ALL")) {
+            storeWindow.showProducts(engine.getAllProducts());
+            return;
+        }
+
+        Category category = Category.valueOf(categoryText);
+
+        java.util.List<Product> filtered = new java.util.ArrayList<>();
+
+        for (Product p : engine.getAllProducts()) {
+            if (p.getCategory() == category) {
+                filtered.add(p);
+            }
+        }
+
+        storeWindow.showProducts(filtered);
+    }
+
 }

@@ -143,6 +143,10 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
     public String getImagePath(){
             return imagePath;
     }
+    public Category getCategory() {
+        return category;
+    }
+
 
 
 

@@ -13,7 +13,7 @@ public class FrameWindow extends JFrame {
         setLayout(new BorderLayout());
 
         ProductDetailsPanel detailsPanel = new ProductDetailsPanel();
-        detailsPanel.setPreferredSize(new Dimension(180, 180));
+        detailsPanel.setPreferredSize(new Dimension(250, 600));
         JPanel rightWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         rightWrapper.add(detailsPanel);
 
@@ -31,11 +31,18 @@ public class FrameWindow extends JFrame {
         JButton loadButton = new JButton("Load");
         JButton saveButton = new JButton("Save");
 
+        JComboBox<String> categoryBox = new JComboBox<>(
+                new String[]{"ALL", "CLOTHING", "BOOKS", "ELECTRONICS"}
+        );
+
 
         searchButton.addActionListener(e ->
                 controller.search(searchField.getText())
         );
-
+        categoryBox.addActionListener(e -> {
+            String selected = (String) categoryBox.getSelectedItem();
+            controller.filterByCategory(selected);
+        });
         loadButton.addActionListener(e ->
                 controller.load(this)
         );
@@ -47,6 +54,8 @@ public class FrameWindow extends JFrame {
         searchPanel.add(new JLabel("Search product:"));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
+        searchPanel.add(new JLabel("Category:"));
+        searchPanel.add(categoryBox);
         searchPanel.add(loadButton);
         searchPanel.add(saveButton);
 

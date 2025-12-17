@@ -40,14 +40,30 @@ public class ProductDetailsPanel extends JPanel {
         add(content);
     }
     public void showProduct(Product p) {
-        nameLabel.setText("Name: " + p.getDisplayName());
-        priceLabel.setText("Price: " + p.getPrice());
-        stockLabel.setText("Stock: " + p.getStock());
-        descriptionArea.setText(p.getDescription());
-        ImageIcon icon = new ImageIcon(
-                getClass().getClassLoader().getResource("images/tshirt.png")
-        );
-        imageLabel.setIcon(icon);
 
+        nameLabel.setText("Name: " + p.getDisplayName());
+        priceLabel.setText("Price: " + p.getPrice() + " ₪");
+        stockLabel.setText("In stock: " + p.getStock());
+
+        descriptionArea.setText(p.getDescription());
+
+        // טעינת תמונה לפי הנתיב של המוצר
+        try {
+            ImageIcon icon = new ImageIcon(
+                    getClass().getClassLoader().getResource(p.getImagePath())
+            );
+            imageLabel.setIcon(icon);
+        } catch (Exception e) {
+            imageLabel.setIcon(null);
+        }
+
+        // פעולה מינימלית ל-Add to Cart
+        addToCartButton.addActionListener(ev ->
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Product added to cart"
+                )
+        );
     }
+
 }

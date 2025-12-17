@@ -25,7 +25,6 @@ public class StoreEngine {
 
     /** List of registered customers. */
     private List<Customer> customers;
-
     /** Counter used for creating new order IDs. */
     private int nextOrderId;
     /**
@@ -89,5 +88,13 @@ public class StoreEngine {
 
 
     }
+    /**
+     * Removes all products from the store.
+     * Used by the controller before loading products from file.
+     */
+    public void clearProducts() {
+        products.clear();
+    }
+
 
 }
