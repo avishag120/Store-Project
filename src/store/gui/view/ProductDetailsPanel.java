@@ -24,6 +24,8 @@ public class ProductDetailsPanel extends JPanel {
         descriptionArea.setWrapStyleWord(true);
 
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        content.add(imageLabel);
+
 
         content.add(nameLabel);
         content.add(priceLabel);
@@ -37,7 +39,6 @@ public class ProductDetailsPanel extends JPanel {
 
         add(content);
     }
-
     public void showProduct(Product p) {
         nameLabel.setText("Name: " + p.getDisplayName());
         priceLabel.setText("Price: " + p.getPrice());

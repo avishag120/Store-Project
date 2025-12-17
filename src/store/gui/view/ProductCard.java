@@ -9,7 +9,7 @@ import store.gui.controler.StoreController;
 public class ProductCard extends  JPanel {
     private Product product;
 
-    private ProductCard(Product product, StoreController controller) {
+    public ProductCard(Product product, StoreController controller) {
         this.product = product;
 
         setLayout(new BorderLayout());
