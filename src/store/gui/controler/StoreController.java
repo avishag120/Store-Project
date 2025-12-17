@@ -80,8 +80,8 @@ public class StoreController {
                                 stock,
                                 description,
                                 category,
-                                java.awt.Color.BLUE, // ערך זמני
-                                "M",                 // ערך זמני
+                                java.awt.Color.BLUE,
+                                "M",
                                 imagePath
                         );
                         break;
@@ -93,7 +93,7 @@ public class StoreController {
                                 stock,
                                 description,
                                 category,
-                                java.awt.Color.WHITE, // ערך זמני
+                                java.awt.Color.WHITE,
                                 "Unknown Author",
                                 0,
                                 imagePath
@@ -107,7 +107,7 @@ public class StoreController {
                                 stock,
                                 description,
                                 category,
-                                java.awt.Color.BLACK, // ערך זמני
+                                java.awt.Color.BLACK,
                                 12,
                                 "Unknown Brand",
                                 imagePath
@@ -147,8 +147,8 @@ public class StoreController {
             );
         }
     }
-    public void productSelected(Product product) {
-        storeWindow.showProductDetails(product);
+    public void productSelected(Product product,ImageIcon icon) {
+        storeWindow.showProductDetails(product,icon);
     }
     public void filterByCategory(String categoryText) {
 

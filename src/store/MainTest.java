@@ -45,7 +45,7 @@ public class MainTest extends JFrame {
                 Category.CLOTHING,
                 Color.RED,
                 "M",
-                "images/tshirt.png"
+                "store/gui/view/resources/images/CLOTHING_T-Shirt.png"
 
         );
 
