@@ -2,15 +2,18 @@ package store.gui.controler;
 import javax.swing.*;
 import java.io.File;
 import store.Model.products.Product;
+import store.gui.view.CartWindow;
 import store.gui.view.StoreWindow;
 import store.Model.engine.StoreEngine;
 import java.util.Scanner;
 import store.Model.products.Category;
+import store.Model.cart.Cart;
 
 
 public class StoreController {
     private StoreWindow storeWindow;
     private StoreEngine engine;
+    private Cart cart = new Cart();
 
     public StoreController(StoreWindow storeWindow) {
 
@@ -169,5 +172,17 @@ public class StoreController {
 
         storeWindow.showProducts(filtered);
     }
+    public void addToCart(Product product, int qty) {
+        cart.addItem(product, qty);
+    }
+    public void openCart() {
+        CartWindow window = new CartWindow();
+        window.showCart(cart);
+        window.setVisible(true);
+    }
+
+
+
+
 
 }

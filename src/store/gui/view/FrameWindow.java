@@ -60,6 +60,13 @@ public class FrameWindow extends JFrame {
         searchPanel.add(saveButton);
 
         add(searchPanel,BorderLayout.NORTH);
+        JButton cartButton = new JButton("View Cart");
+        cartButton.addActionListener(e -> controller.openCart());
+        searchPanel.add(cartButton);
+
+        detailsPanel.setController(controller);
+
+
     }
 
 

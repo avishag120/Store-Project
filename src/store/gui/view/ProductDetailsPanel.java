@@ -1,6 +1,7 @@
 package store.gui.view;
 
 import store.Model.products.Product;
+import store.gui.controler.StoreController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,8 @@ public class ProductDetailsPanel extends JPanel {
     private JTextArea descriptionArea=new JTextArea();
     private JLabel imageLabel=new JLabel();
     private JButton addToCartButton=new JButton("Add to cart");
+    private StoreController controller;
+
 
 
     public ProductDetailsPanel() {
@@ -40,20 +43,29 @@ public class ProductDetailsPanel extends JPanel {
 
         add(content);
     }
-    public void showProduct(Product p,ImageIcon icon) {
+    public void showProduct(Product p, ImageIcon icon) {
         imageLabel.setIcon(icon);
         nameLabel.setText("Name: " + p.getDisplayName());
         priceLabel.setText("Price: " + p.getPrice() + " ₪");
         stockLabel.setText("In stock: " + p.getStock());
-
         descriptionArea.setText(p.getDescription());
 
-        addToCartButton.addActionListener(ev ->
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Product added to cart"
-                )
-        );
+        for (var l : addToCartButton.getActionListeners()) {
+            addToCartButton.removeActionListener(l);
+        }
+
+        addToCartButton.addActionListener(e -> {
+            controller.addToCart(p, 1);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Product added to cart successfully"
+            );
+        });
     }
+    public void setController(StoreController controller) {
+        this.controller = controller;
+    }
+
 
 }
