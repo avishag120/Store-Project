@@ -5,11 +5,15 @@ import java.net.URL;
 import store.Model.cart.Cart;
 import store.Model.cart.CartItem;
 import store.Model.products.Product;
+import store.gui.controler.StoreController;
+
 
 public class CartWindow extends JFrame {
     private JPanel itemsPanel;
     private JLabel totalLabel;
     private JButton checkoutButton;
+    private StoreController controller;
+
 
 
     public CartWindow() {
@@ -26,11 +30,17 @@ public class CartWindow extends JFrame {
         JPanel bottomPanel = new JPanel(new BorderLayout());
 
         totalLabel = new JLabel("Total: 0 ₪");
+
         checkoutButton = new JButton("Checkout");
+
+        checkoutButton.addActionListener(e -> {
+            controller.checkout();
+            JOptionPane.showMessageDialog(this, "Order completed successfully");
+            dispose();
+        });
 
         bottomPanel.add(totalLabel, BorderLayout.WEST);
         bottomPanel.add(checkoutButton, BorderLayout.EAST);
-
         add(bottomPanel, BorderLayout.SOUTH);
     }
     public void showCart(Cart cart) {
@@ -79,25 +89,50 @@ public class CartWindow extends JFrame {
             JLabel qtyLabel = new JLabel(String.valueOf(item.getQuantity()));
             JButton plus = new JButton("+");
             JButton remove = new JButton("Remove");
+            remove.addActionListener(e -> {
+                int qty = item.getQuantity();
+                cart.removeItem(p);
+                p.increaseStock(qty);
+                showCart(cart);
+            });
+
 
             minus.addActionListener(e -> {
                 if (item.getQuantity() <= 1) {
                     cart.removeItem(p);
+                    p.increaseStock(1);
                 } else {
                     item.decrease();
+                    p.increaseStock(1);
                 }
+                controller.refreshProducts();
+
                 showCart(cart);
             });
+
+
 
             plus.addActionListener(e -> {
-                item.increase();
+                if (p.getStock() > 0) {
+                    item.increase();
+                    p.decreaseStock(1);
+                    controller.refreshProducts();
+
+                    showCart(cart);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No more stock");
+                }
+            });
+            remove.addActionListener(e -> {
+                int qty = item.getQuantity();
+                cart.removeItem(p);
+                p.increaseStock(qty);
+                controller.refreshProducts(); // ← גם כאן
                 showCart(cart);
             });
 
-            remove.addActionListener(e -> {
-                cart.removeItem(p);
-                showCart(cart);
-            });
+
+
 
             qtyPanel.add(minus);
             qtyPanel.add(qtyLabel);
@@ -115,6 +150,10 @@ public class CartWindow extends JFrame {
         itemsPanel.revalidate();
         itemsPanel.repaint();
     }
+    public void setController(StoreController controller) {
+        this.controller = controller;
+    }
+
 
 
 

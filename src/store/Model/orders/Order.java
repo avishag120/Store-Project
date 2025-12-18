@@ -8,13 +8,18 @@ package store.Model.orders;
 import store.Model.cart.CartItem;
 import store.Model.core.Persistable;
 import store.Model.products.Product;
-
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+
 
 public class Order  implements Persistable {
     private int orderID;
     private List<CartItem> items;
     private double totalAmount;
+    private LocalDateTime createdAt;
+
     /** Current status of the order (NEW, PAID, SHIPPED, DELIVERED). */
 
     private OrderStatus status;
@@ -30,6 +35,8 @@ public class Order  implements Persistable {
        this.items = items;
         this.totalAmount = totalAmount;
         this.status = OrderStatus.NEW;
+       this.createdAt = LocalDateTime.now();
+
    }
     /**
      * Saves the order to a file.
@@ -98,7 +105,16 @@ public class Order  implements Persistable {
 
         sb.append("Order ID: ").append(orderID).append("\n");
         sb.append("Status: ").append(status).append("\n");
-        sb.append("Total Amount: ").append(totalAmount).append("\n");
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        sb.append("Created At: ")
+                .append(createdAt.format(formatter))
+                .append("\n");
+
+        sb.append("Total Amount: ")
+                .append(String.format("%.2f", totalAmount))
+                .append("\n");
         sb.append("Items:\n");
 
         for (CartItem item : items) {

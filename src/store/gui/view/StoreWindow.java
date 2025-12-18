@@ -29,6 +29,8 @@ public class StoreWindow extends JPanel {
 
         for (Product p : products) {
             JButton btn = new JButton(p.getDisplayName());
+            btn.setToolTipText(p.toString());
+
 
             String imagePath = "/images/"+ p.getCategory()+"_"+ p.getDisplayName()+".png";
             URL imageURL = getClass().getResource(imagePath);
@@ -49,8 +51,6 @@ public class StoreWindow extends JPanel {
             btn.addActionListener(e ->
                     controller.productSelected(p,scaledIconForListener)
             );
-
-
 
             add(btn);
         }

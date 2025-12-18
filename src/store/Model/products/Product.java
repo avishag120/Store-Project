@@ -115,13 +115,14 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
      */
     @Override
     public String toString(){
-            return "Name: " + name +
-                    "\nPrice: " + price +
-                    "\nStock: " + stock +
-                    "\nDescription: " + description +
-                    "\nCategory: " + category +
-                    "\nColor: " + color;
-        }
+        return "<html>"
+                + "<b>Name:</b> " + name + "<br>"
+                + "<b>Price:</b> " + price + " ₪<br>"
+                + "<b>Stock:</b> " + stock + "<br>"
+                + "<b>Description:</b> " + description + "<br>"
+                + "<b>Category:</b> " + category
+                + "</html>";
+    }
 
     /**
      * Checks if two products are the same.

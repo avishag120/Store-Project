@@ -8,12 +8,21 @@ import store.Model.engine.StoreEngine;
 import java.util.Scanner;
 import store.Model.products.Category;
 import store.Model.cart.Cart;
+import store.Model.orders.Order;
+import java.util.ArrayList;
+import java.util.List;
+import store.gui.view.OrderHistoryWindow;
+
+
 
 
 public class StoreController {
     private StoreWindow storeWindow;
     private StoreEngine engine;
     private Cart cart = new Cart();
+    private List<Order> orderHistory = new ArrayList<>();
+    private int nextOrderId = 1;
+
 
     public StoreController(StoreWindow storeWindow) {
 
@@ -173,13 +182,46 @@ public class StoreController {
         storeWindow.showProducts(filtered);
     }
     public void addToCart(Product product, int qty) {
-        cart.addItem(product, qty);
+        if (product.getStock() >= qty) {
+            cart.addItem(product, qty);
+            product.decreaseStock(qty);
+            storeWindow.showProducts(engine.getAllProducts()); // רענון תצוגה
+        } else {
+            JOptionPane.showMessageDialog(null, "Not enough stock");
+        }
     }
     public void openCart() {
         CartWindow window = new CartWindow();
+        window.setController(this);
         window.showCart(cart);
         window.setVisible(true);
     }
+    public void checkout() {
+        if (cart.getItems().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Cart is empty");
+            return;
+        }
+        Order order = new Order(
+                nextOrderId++,
+                new ArrayList<>(cart.getItems()),
+                cart.calculateTotal()
+        );
+
+        orderHistory.add(order);
+        cart.clear();
+
+        JOptionPane.showMessageDialog(null, "Order completed successfully");
+    }
+    public void openOrderHistory() {
+        OrderHistoryWindow window = new OrderHistoryWindow(orderHistory);
+        window.setVisible(true);
+    }
+    public void refreshProducts() {
+        storeWindow.showProducts(engine.getAllProducts());
+    }
+
+
+
 
 
 

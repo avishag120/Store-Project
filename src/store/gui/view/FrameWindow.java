@@ -3,7 +3,6 @@ import store.gui.controler.StoreController;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class FrameWindow extends JFrame {
 
     public FrameWindow() {
@@ -24,7 +23,11 @@ public class FrameWindow extends JFrame {
         StoreController controller = new StoreController(storePanel);
         storePanel.setController(controller);
 
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel searchPanel = new JPanel();
+        searchPanel.setLayout(new GridLayout(2, 1));
+
+        JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         JTextField searchField = new JTextField(20);
         JButton searchButton = new JButton("Search");
@@ -51,27 +54,30 @@ public class FrameWindow extends JFrame {
                 controller.save(this)
         );
 
-        searchPanel.add(new JLabel("Search product:"));
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
-        searchPanel.add(new JLabel("Category:"));
-        searchPanel.add(categoryBox);
-        searchPanel.add(loadButton);
-        searchPanel.add(saveButton);
+        row1.add(new JLabel("Search product:"));
+        row1.add(searchField);
+        row1.add(searchButton);
+        row1.add(new JLabel("Category:"));
+        row1.add(categoryBox);
 
-        add(searchPanel,BorderLayout.NORTH);
+        row2.add(loadButton);
+        row2.add(saveButton);
         JButton cartButton = new JButton("View Cart");
         cartButton.addActionListener(e -> controller.openCart());
-        searchPanel.add(cartButton);
+
+        JButton historyButton = new JButton("Order History");
+        historyButton.addActionListener(e -> controller.openOrderHistory());
+
+        row2.add(cartButton);
+        row2.add(historyButton);
+        searchPanel.add(row1);
+        searchPanel.add(row2);
+
+        add(searchPanel,BorderLayout.NORTH);
 
         detailsPanel.setController(controller);
 
-
     }
-
-
-
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
