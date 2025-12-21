@@ -1,39 +1,57 @@
 /**
  * Submitted by:
  * Maayan Gueta – ID 327554143
- * Avishag Almakaies – ID 325684678
+ * Avishag Almakies – ID 325684678
  */
 package store.gui.view;
 import store.gui.controler.StoreController;
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * The main window of the online store application.
+ * This class is responsible for building the main GUI layout,
+ * including the product catalog, search and filter controls,
+ * cart access, and order history access.
+ *
+ * This class belongs to the View layer and does not contain
+ * any business logic.
+ */
 public class FrameWindow extends JFrame {
-
+    /**
+     * Constructs the main application window.
+     * Initializes all GUI components, layouts and event listeners,
+     * and connects the View to the StoreController.
+     */
     public FrameWindow() {
         setTitle("Online Store");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
         setLayout(new BorderLayout());
+        // Product details panel
         ProductDetailsPanel detailsPanel = new ProductDetailsPanel();
         detailsPanel.setPreferredSize(new Dimension(250, 600));
         JPanel rightWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         rightWrapper.add(detailsPanel);
         add(rightWrapper, BorderLayout.EAST);
+        //Store catalog panel (center)
         StoreWindow storePanel = new StoreWindow(detailsPanel);
         add(storePanel, BorderLayout.CENTER);
+        // Controller
         StoreController controller = new StoreController(storePanel);
         storePanel.setController(controller);
         detailsPanel.setController(controller);
+        // search, filter, buttons
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new GridLayout(2, 1));
         JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        //Search by product name
         JComboBox<String> searchField = new JComboBox<>();
         searchField.addItem("ALL");
         JComboBox<String> categoryBox = new JComboBox<>(
                 new String[]{"ALL", "CLOTHING", "BOOKS", "ELECTRONICS"}
         );
+        // Load & Save buttons
         JButton loadButton = new JButton("Load");
         JButton saveButton = new JButton("Save");
         searchField.addActionListener(e -> {
@@ -44,6 +62,7 @@ public class FrameWindow extends JFrame {
                 controller.search(selected);
             }
         });
+        //Category filter
         categoryBox.addActionListener(e -> {
             String selected = (String) categoryBox.getSelectedItem();
             controller.filterByCategory(selected);
@@ -51,6 +70,7 @@ public class FrameWindow extends JFrame {
         loadButton.addActionListener(e -> {
             controller.load(this);
 
+            // Refresh search list after loading products
             searchField.removeAllItems();
             searchField.addItem("ALL");
 
@@ -67,6 +87,7 @@ public class FrameWindow extends JFrame {
         row1.add(categoryBox);
         row2.add(loadButton);
         row2.add(saveButton);
+        //  Cart & order history
         JButton cartButton = new JButton("View Cart");
         cartButton.addActionListener(e -> controller.openCart());
         JButton historyButton = new JButton("Order History");
@@ -80,7 +101,12 @@ public class FrameWindow extends JFrame {
         detailsPanel.setController(controller);
 
     }
-
+    /**
+     * The entry point of the application.
+     * Creates and displays the main window on the Event Dispatch Thread.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             FrameWindow frame = new FrameWindow();

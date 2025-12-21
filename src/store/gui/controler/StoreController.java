@@ -1,11 +1,12 @@
 /**
  * Submitted by:
  * Maayan Gueta – ID 327554143
- * Avishag Almakaies – ID 325684678
+ * Avishag Almakies – ID 325684678
  */
 package store.gui.controler;
 import javax.swing.*;
 import java.io.File;
+import store.Model.cart.CartItem;
 import store.Model.products.Product;
 import store.gui.view.CartWindow;
 import store.gui.view.StoreWindow;
@@ -19,22 +20,35 @@ import java.util.List;
 import store.gui.view.OrderHistoryWindow;
 
 
-
-
-
 public class StoreController {
+    /** The main store window (catalog + details). */
     private StoreWindow storeWindow;
+    /** Store engine that manages the products list. */
     private StoreEngine engine;
+    /** Current shopping cart for this session. */
     private Cart cart = new Cart();
+    /** List of all orders created in this session (also loaded from file). */
     private List<Order> orderHistory = new ArrayList<>();
+    /** Next order id to use when creating a new order. */
     private int nextOrderId = 1;
 
 
+    /**
+     * Creates the controller and loads previous orders from the local CSV file (if exists).
+     *
+     * @param storeWindow the main store window that this controller controls
+     */
     public StoreController(StoreWindow storeWindow) {
         this.storeWindow = storeWindow;
         this.engine = new StoreEngine();
         loadOrdersFromFile();
         }
+    /**
+     * Searches products by name (case-insensitive) and updates the catalog view.
+     * If the text is null/empty, it shows all products.
+     *
+     * @param text user search input (product name part)
+     */
     public void search(String text) {
         if (text == null || text.isEmpty()) {
             storeWindow.showProducts(engine.getAllProducts());
@@ -49,6 +63,13 @@ public class StoreController {
         }
         storeWindow.showProducts(result);
     }
+    /**
+     * Loads products from a CSV file selected by the user and shows them in the catalog.
+     * The method clears current products in the engine and then reads the file line by line.
+     * Expected CSV header: name,price,stock,description,category,imagePath
+     *
+     * @param frame parent frame used for dialogs (file chooser + messages)
+     */
     public void load(JFrame frame) {
 
         JFileChooser chooser = new JFileChooser();
@@ -152,6 +173,12 @@ public class StoreController {
                     e.toString() );
         }
     }
+    /**
+     * Saves all current products to a CSV file chosen by the user.
+     * CSV header: name,price,stock,description,category,imagePath
+     *
+     * @param frame parent frame used for the save dialog
+     */
     public void save(JFrame frame) {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(
@@ -189,9 +216,23 @@ public class StoreController {
             );
         }
     }
+    /**
+     * Called when the user selects a product card from the catalog.
+     * Opens the product details area/window.
+     *
+     * @param product selected product
+     * @param icon product image icon (already loaded by the view)
+     */
     public void productSelected(Product product,ImageIcon icon) {
         storeWindow.showProductDetails(product,icon);
     }
+    /**
+     * Filters the catalog by a selected category and updates the view.
+     * If categoryText is "ALL", it shows all products.
+     *
+     * @param categoryText category name as string (for example: "ALL", "BOOKS", "CLOTHING", ...)
+     * @throws IllegalArgumentException if categoryText is not a valid Category name and not "ALL"
+     */
     public void filterByCategory(String categoryText) {
 
         if (categoryText.equals("ALL")) {
@@ -211,6 +252,13 @@ public class StoreController {
 
         storeWindow.showProducts(filtered);
     }
+    /**
+     * Adds the given product to the cart in the requested quantity.
+     * If there is enough stock, the stock is decreased and the catalog view is refreshed.
+     *
+     * @param product product to add
+     * @param qty quantity to add (must be positive)
+     */
     public void addToCart(Product product, int qty) {
         if (product.getStock() >= qty) {
             cart.addItem(product, qty);
@@ -220,36 +268,67 @@ public class StoreController {
             JOptionPane.showMessageDialog(null, "Not enough stock");
         }
     }
+    /**
+     * Opens the cart window and shows current cart items.
+     */
     public void openCart() {
         CartWindow window = new CartWindow();
         window.setController(this);
         window.showCart(cart);
         window.setVisible(true);
     }
+    /**
+     * Creates an order from the current cart and saves it to the order history file.
+     * After checkout, the cart is cleared.
+     * If the cart is empty, a message is shown and nothing happens.
+     */
     public void checkout() {
+
         if (cart.getItems().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Cart is empty");
             return;
         }
+        List<CartItem> snapshot = new ArrayList<>();
+        for (CartItem item : cart.getItems()) {
+            snapshot.add(
+                    new CartItem(
+                            item.getProduct(),
+                            item.getQuantity()
+                    )
+            );
+        }
+
         Order order = new Order(
                 nextOrderId++,
-                new ArrayList<>(cart.getItems()),
+                snapshot,
                 cart.calculateTotal()
         );
 
         orderHistory.add(order);
         appendOrderToFile(order);
-        cart.clear();
 
-        JOptionPane.showMessageDialog(null, "Order completed successfully");
+        cart.clear();
     }
+    /**
+     * Opens the order history window and displays the orders loaded/created.
+     */
     public void openOrderHistory() {
         OrderHistoryWindow window = new OrderHistoryWindow(orderHistory);
         window.setVisible(true);
     }
+
+    /**
+     * Refreshes the catalog products view (useful after stock changes or loading data).
+     */
     public void refreshProducts() {
         storeWindow.showProducts(engine.getAllProducts());
     }
+    /**
+     * Appends one order to a local CSV file named "orders_history.csv".
+     * If the file does not exist, it creates it and writes the header line.
+     *
+     * @param order the order to save
+     */
     private void appendOrderToFile(Order order) {
 
         File file = new File("orders_history.csv");
@@ -281,6 +360,11 @@ public class StoreController {
             e.printStackTrace();
         }
     }
+    /**
+     * Loads orders from a local CSV file named "orders_history.csv" into memory.
+     * Updates {@link #nextOrderId} so new orders will continue after the last saved id.
+     * If the file does not exist, nothing happens.
+     */
     private void loadOrdersFromFile() {
         File file = new File("orders_history.csv");
         if (!file.exists()) return;
@@ -311,6 +395,13 @@ public class StoreController {
         }
 
     }
+    /**
+     * Returns all products from the store engine.
+     * This is usually used by GUI views that need to refresh or display products.
+     *
+     * @return list of all products in the store
+     */
+
     public java.util.List<store.Model.products.Product> getAllProducts() {
         return engine.getAllProducts();
     }

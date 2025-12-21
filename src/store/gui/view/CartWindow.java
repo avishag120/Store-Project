@@ -1,7 +1,7 @@
 /**
  * Submitted by:
  * Maayan Gueta – ID 327554143
- * Avishag Almakaies – ID 325684678
+ * Avishag Almakies – ID 325684678
  */
 package store.gui.view;
 import javax.swing.*;
@@ -12,15 +12,28 @@ import store.Model.cart.CartItem;
 import store.Model.products.Product;
 import store.gui.controler.StoreController;
 
-
+/**
+ * A GUI window that displays the user's shopping cart.
+ * <p>
+ * The window shows each cart item as a row with:
+ * image, product name, price, quantity controls (+ / -) and remove button.
+ * It also shows the total cart price and a checkout button.
+ */
 public class CartWindow extends JFrame {
+    /** Panel that contains all cart item rows. */
     private JPanel itemsPanel;
+    /** Label that shows the total cart price. */
     private JLabel totalLabel;
+    /** Button that performs checkout and closes the window. */
     private JButton checkoutButton;
+    /** Controller used to call actions like checkout and refresh products. */
     private StoreController controller;
 
 
-
+    /**
+     * Builds the shopping cart window UI (layout + buttons).
+     * The cart content itself is displayed using {@link #showCart(Cart)}.
+     */
     public CartWindow() {
         setTitle("Shopping Cart");
         setSize(400, 500);
@@ -43,6 +56,15 @@ public class CartWindow extends JFrame {
         bottomPanel.add(checkoutButton, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
     }
+    /**
+     * Displays the current cart items in the window.
+     * <p>
+     * For each item it creates a row with:
+     * image, name, price, quantity controls (+ / -) and remove.
+     * After updating the items list, it also updates the total label.
+     *
+     * @param cart the cart to display
+     */
     public void showCart(Cart cart) {
         itemsPanel.removeAll();
         for (CartItem item : cart.getItems()) {
@@ -116,10 +138,18 @@ public class CartWindow extends JFrame {
             itemsPanel.add(row);
             itemsPanel.add(Box.createVerticalStrut(8));
         }
-        totalLabel.setText("Total: " + cart.calculateTotal() + " ₪");
+        totalLabel.setText(
+                String.format("Total: %.2f ₪", cart.calculateTotal())
+        );
         itemsPanel.revalidate();
         itemsPanel.repaint();
     }
+    /**
+     * Sets the controller for this window.
+     * The controller is used for actions like checkout and refreshing the products list.
+     *
+     * @param controller store controller instance
+     */
     public void setController(StoreController controller) {
         this.controller = controller;
     }
