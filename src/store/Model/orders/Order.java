@@ -149,20 +149,6 @@ public class Order  implements Persistable {
     public String getItemsText() {
         return itemsText;
     }
-    public String getItemsForDisplay() {
-        if (items != null && !items.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (var item : items) {
-                sb.append(item.getProduct().getDisplayName())
-                        .append(" x")
-                        .append(item.getQuantity())
-                        .append(" | ");
-            }
-            if (sb.length() > 3) sb.setLength(sb.length() - 3);
-            return sb.toString();
-        }
-        return itemsText;
-    }
     public void setItemsText(String itemsText) {
         this.itemsText = itemsText;
     }

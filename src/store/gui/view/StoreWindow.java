@@ -1,6 +1,9 @@
+/**
+ * Submitted by:
+ * Maayan Gueta – ID 327554143
+ * Avishag Almakaies – ID 325684678
+ */
 package store.gui.view;
-
-import store.Model.products.Category;
 import store.Model.products.Product;
 import store.gui.controler.StoreController;
 import javax.swing.*;
@@ -30,9 +33,9 @@ public class StoreWindow extends JPanel {
         for (Product p : products) {
             JButton btn = new JButton(p.getDisplayName());
             btn.setToolTipText(p.toString());
-
-
-            String imagePath = "/images/"+ p.getCategory()+"_"+ p.getDisplayName()+".png";
+            btn.setHorizontalTextPosition(SwingConstants.CENTER);
+            btn.setVerticalTextPosition(SwingConstants.BOTTOM);
+            String imagePath = "/images/" + p.getImagePath();
             URL imageURL = getClass().getResource(imagePath);
             ImageIcon scaledIcon= null;
             if(imageURL != null){
@@ -51,10 +54,8 @@ public class StoreWindow extends JPanel {
             btn.addActionListener(e ->
                     controller.productSelected(p,scaledIconForListener)
             );
-
             add(btn);
         }
-
         revalidate();
         repaint();
     }

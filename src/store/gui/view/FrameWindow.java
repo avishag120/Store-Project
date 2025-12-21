@@ -1,3 +1,8 @@
+/**
+ * Submitted by:
+ * Maayan Gueta – ID 327554143
+ * Avishag Almakaies – ID 325684678
+ */
 package store.gui.view;
 import store.gui.controler.StoreController;
 import javax.swing.*;
@@ -20,14 +25,12 @@ public class FrameWindow extends JFrame {
         StoreController controller = new StoreController(storePanel);
         storePanel.setController(controller);
         detailsPanel.setController(controller);
-
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new GridLayout(2, 1));
         JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JComboBox<String> searchField = new JComboBox<>();
         searchField.addItem("ALL");
-
         JComboBox<String> categoryBox = new JComboBox<>(
                 new String[]{"ALL", "CLOTHING", "BOOKS", "ELECTRONICS"}
         );
@@ -55,7 +58,6 @@ public class FrameWindow extends JFrame {
                 searchField.addItem(p.getDisplayName());
             }
         });
-
         saveButton.addActionListener(e ->
                 controller.save(this)
         );

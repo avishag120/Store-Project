@@ -1,8 +1,11 @@
+/**
+ * Submitted by:
+ * Maayan Gueta – ID 327554143
+ * Avishag Almakaies – ID 325684678
+ */
 package store.gui.controler;
 import javax.swing.*;
 import java.io.File;
-
-import store.Model.cart.CartItem;
 import store.Model.products.Product;
 import store.gui.view.CartWindow;
 import store.gui.view.StoreWindow;
@@ -28,7 +31,6 @@ public class StoreController {
 
 
     public StoreController(StoreWindow storeWindow) {
-
         this.storeWindow = storeWindow;
         this.engine = new StoreEngine();
         loadOrdersFromFile();
@@ -45,7 +47,6 @@ public class StoreController {
                 result.add(p);
             }
         }
-
         storeWindow.showProducts(result);
     }
     public void load(JFrame frame) {

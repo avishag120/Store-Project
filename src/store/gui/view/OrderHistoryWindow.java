@@ -20,7 +20,6 @@ public class OrderHistoryWindow extends JFrame {
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
-
         showOrders(orders);}
     public void showOrders(List<Order> orders) {
         if (orders.isEmpty()) {
@@ -45,12 +44,7 @@ public class OrderHistoryWindow extends JFrame {
 
             sb.append("----------------------------------\n");
         }
-
         textArea.setText(sb.toString());
     }
-
-
-
-
 
 }
