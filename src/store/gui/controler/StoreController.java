@@ -310,7 +310,9 @@ public class StoreController {
         }
 
     }
-
+    public java.util.List<store.Model.products.Product> getAllProducts() {
+        return engine.getAllProducts();
+    }
 
 
 
