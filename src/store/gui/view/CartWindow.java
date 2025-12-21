@@ -52,8 +52,9 @@ public class CartWindow extends JFrame {
             row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
             JLabel imageLabel = new JLabel();
             imageLabel.setPreferredSize(new Dimension(70, 70));
-            String imagePath = "/images/" + p.getCategory() + "_" + p.getDisplayName() + ".png";
+            String imagePath = "/images/" + p.getImagePath();
             URL url = getClass().getResource(imagePath);
+
             if (url != null) {
                 Image img = new ImageIcon(url).getImage()
                         .getScaledInstance(70, 70, Image.SCALE_SMOOTH);
