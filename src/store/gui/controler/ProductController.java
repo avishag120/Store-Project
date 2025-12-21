@@ -1,4 +1,0 @@
-package store.gui.controler;
-
-public class ProductController {
-}

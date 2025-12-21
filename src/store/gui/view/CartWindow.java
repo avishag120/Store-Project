@@ -35,9 +35,9 @@ public class CartWindow extends JFrame {
 
         checkoutButton.addActionListener(e -> {
             controller.checkout();
-            JOptionPane.showMessageDialog(this, "Order completed successfully");
             dispose();
         });
+
 
         bottomPanel.add(totalLabel, BorderLayout.WEST);
         bottomPanel.add(checkoutButton, BorderLayout.EAST);

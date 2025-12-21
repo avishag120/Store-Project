@@ -149,13 +149,38 @@ public class StoreController {
     }
     public void save(JFrame frame) {
         JFileChooser chooser = new JFileChooser();
-        int result = chooser.showSaveDialog(frame);
+        chooser.setFileFilter(
+                new javax.swing.filechooser.FileNameExtensionFilter(
+                        "CSV files", "csv"
+                )
+        );
 
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
+        int result = chooser.showSaveDialog(frame);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File file = chooser.getSelectedFile();
+
+        try (java.io.PrintWriter pw = new java.io.PrintWriter(file)) {
+
+            pw.println("name,price,stock,description,category,imagePath");
+
+            for (Product p : engine.getAllProducts()) {
+                pw.println(
+                        p.getDisplayName() + "," +
+                                p.getPrice() + "," +
+                                p.getStock() + "," +
+                                p.getDescription().replace(",", " ") + "," +
+                                p.getCategory() + "," +
+                                p.getImagePath()
+                );
+            }
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(
                     frame,
-                    "Saved to: " + file.getName()
+                    "Error saving products"
             );
         }
     }
