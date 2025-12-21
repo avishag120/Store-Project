@@ -67,6 +67,7 @@ public class FrameWindow extends JFrame {
 
         JButton historyButton = new JButton("Order History");
         historyButton.addActionListener(e -> controller.openOrderHistory());
+        searchPanel.add(historyButton);
 
         row2.add(cartButton);
         row2.add(historyButton);

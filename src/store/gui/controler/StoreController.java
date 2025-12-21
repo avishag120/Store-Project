@@ -1,6 +1,8 @@
 package store.gui.controler;
 import javax.swing.*;
 import java.io.File;
+
+import store.Model.cart.CartItem;
 import store.Model.products.Product;
 import store.gui.view.CartWindow;
 import store.gui.view.StoreWindow;
@@ -12,6 +14,7 @@ import store.Model.orders.Order;
 import java.util.ArrayList;
 import java.util.List;
 import store.gui.view.OrderHistoryWindow;
+
 
 
 
@@ -28,6 +31,7 @@ public class StoreController {
 
         this.storeWindow = storeWindow;
         this.engine = new StoreEngine();
+        loadOrdersFromFile();
         }
     public void search(String text) {
         if (text == null || text.isEmpty()) {
@@ -233,6 +237,7 @@ public class StoreController {
         );
 
         orderHistory.add(order);
+        appendOrderToFile(order);
         cart.clear();
 
         JOptionPane.showMessageDialog(null, "Order completed successfully");
@@ -244,6 +249,70 @@ public class StoreController {
     public void refreshProducts() {
         storeWindow.showProducts(engine.getAllProducts());
     }
+    private void appendOrderToFile(Order order) {
+
+        File file = new File("orders_history.csv");
+
+        boolean writeHeader = !file.exists();
+
+        try (java.io.FileWriter fw = new java.io.FileWriter(file, true);
+             java.io.PrintWriter pw = new java.io.PrintWriter(fw)) {
+
+            if (writeHeader) {
+                pw.println("orderId,totalAmount,items");
+            }
+
+            StringBuilder itemsText = new StringBuilder();
+            for (store.Model.cart.CartItem item : order.getItems()) {
+                itemsText.append(item.getProduct().getDisplayName())
+                        .append(" x")
+                        .append(item.getQuantity())
+                        .append("; ");
+            }
+
+            pw.println(
+                    order.getOrderID() + "," +
+                            order.getTotalAmount() + "," +
+                            "\"" + itemsText.toString() + "\""
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadOrdersFromFile() {
+        File file = new File("orders_history.csv");
+        if (!file.exists()) return;
+
+        try (Scanner sc = new Scanner(file)) {
+
+            if (sc.hasNextLine()) sc.nextLine();
+
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split(",", 3);
+                if (parts.length < 3) continue;
+
+                int orderId = Integer.parseInt(parts[0]);
+                double total = Double.parseDouble(parts[1]);
+                String itemsText = parts[2].replace("\"", "");
+
+                Order order = new Order(orderId, itemsText, total);
+                order.setItemsText(itemsText);
+                orderHistory.add(order);
+                nextOrderId = Math.max(nextOrderId, orderId + 1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 
 
 

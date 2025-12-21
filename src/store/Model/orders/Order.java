@@ -19,6 +19,9 @@ public class Order  implements Persistable {
     private List<CartItem> items;
     private double totalAmount;
     private LocalDateTime createdAt;
+    private String itemsText;
+
+
 
     /** Current status of the order (NEW, PAID, SHIPPED, DELIVERED). */
 
@@ -38,6 +41,13 @@ public class Order  implements Persistable {
        this.createdAt = LocalDateTime.now();
 
    }
+    public Order(int orderID, String itemsText, double totalAmount) {
+        this.orderID = orderID;
+        this.itemsText = itemsText;
+        this.totalAmount = totalAmount;
+        this.status = OrderStatus.NEW;
+        this.createdAt = LocalDateTime.now();
+    }
     /**
      * Saves the order to a file.
      * (Empty for now, will be used later.)
@@ -127,6 +137,39 @@ public class Order  implements Persistable {
 
         return sb.toString();
     }
+    public int getOrderID() {
+        return orderID;
+    }
+    public List<CartItem> getItems() {
+        return items;
+    }
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+    public String getItemsText() {
+        return itemsText;
+    }
+    public String getItemsForDisplay() {
+        if (items != null && !items.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (var item : items) {
+                sb.append(item.getProduct().getDisplayName())
+                        .append(" x")
+                        .append(item.getQuantity())
+                        .append(" | ");
+            }
+            if (sb.length() > 3) sb.setLength(sb.length() - 3);
+            return sb.toString();
+        }
+        return itemsText;
+    }
+    public void setItemsText(String itemsText) {
+        this.itemsText = itemsText;
+    }
+
+
+
+
 
 
 
