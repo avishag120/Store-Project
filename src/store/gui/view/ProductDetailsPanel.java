@@ -8,18 +8,43 @@ import store.Model.products.Product;
 import store.gui.controler.StoreController;
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * ProductDetailsPanel is a panel that displays detailed
+ * information about a selected product.
+ *
+ * It shows the product image, name, price, stock,
+ * description and allows the user to add the product
+ * to the shopping cart.
+ */
 public class ProductDetailsPanel extends JPanel {
-
+    /** Label for displaying the product name. */
     private JLabel nameLabel=new JLabel();
-    private JLabel priceLabel=new JLabel();
-    private JLabel stockLabel=new JLabel();
-    private JTextArea descriptionArea=new JTextArea();
-    private JLabel imageLabel=new JLabel();
-    private JButton addToCartButton=new JButton("Add to cart");
-    private JLabel addedLabel = new JLabel("✔ Added to cart");
-    private StoreController controller;
 
+    /** Label for displaying the product price. */
+    private JLabel priceLabel=new JLabel();
+
+
+    /** Label for displaying the product stock. */
+    private JLabel stockLabel=new JLabel();
+
+    /** Text area for displaying the product description. */
+    private JTextArea descriptionArea=new JTextArea();
+
+    /** Label for displaying the product image. */
+    private JLabel imageLabel=new JLabel();
+
+    /** Button used to add the product to the cart. */
+    private JButton addToCartButton=new JButton("Add to cart");
+
+    /** Label that shows a confirmation message when a product is added. */
+    private JLabel addedLabel = new JLabel("✔ Added to cart");
+
+    /** Reference to the store controller. */
+    private StoreController controller;
+    /**
+     * Creates a new ProductDetailsPanel and initializes
+     * all UI components.
+     */
     public ProductDetailsPanel() {
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -42,12 +67,20 @@ public class ProductDetailsPanel extends JPanel {
         content.add(addedLabel);
         add(content);
     }
+    /**
+     * Displays the details of the selected product.
+     *
+     * @param p the product to display
+     * @param icon the product image icon
+     */
     public void showProduct(Product p, ImageIcon icon) {
         imageLabel.setIcon(icon);
         nameLabel.setText("Name: " + p.getDisplayName());
         priceLabel.setText("Price: " + p.getPrice() + " ₪");
         stockLabel.setText("In stock: " + p.getStock());
         descriptionArea.setText(p.getDescription());
+
+        // Remove previous listeners to avoid duplicate actions
         for (var l : addToCartButton.getActionListeners()) {
             addToCartButton.removeActionListener(l);
         }
@@ -56,6 +89,10 @@ public class ProductDetailsPanel extends JPanel {
             showAddedMessage();
         });
     }
+    /**
+     * Shows a temporary confirmation message
+     * after adding a product to the cart.
+     */
     private void showAddedMessage() {
         addedLabel.setVisible(true);
 
@@ -63,6 +100,11 @@ public class ProductDetailsPanel extends JPanel {
         timer.setRepeats(false);
         timer.start();
     }
+    /**
+     * Sets the store controller for this panel.
+     *
+     * @param controller the StoreController instance
+     */
     public void setController(StoreController controller) {
         this.controller = controller;
     }

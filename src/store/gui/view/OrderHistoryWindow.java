@@ -6,10 +6,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * OrderHistoryWindow represents a window that displays
+ * the history of all orders made by the user.
+ *
+ * The window shows basic information for each order,
+ * such as order ID, total price and the list of items.
+ */
+
 public class OrderHistoryWindow extends JFrame {
+    /** Text area used to display the orders information. */
     private JTextArea textArea;
 
-
+    /**
+     * Creates a new OrderHistoryWindow.
+     *
+     * @param orders a list of orders to display in the window
+     */
     public OrderHistoryWindow(List<Order> orders) {
         setTitle("Order History");
         setSize(400, 500);
@@ -21,6 +34,13 @@ public class OrderHistoryWindow extends JFrame {
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
         showOrders(orders);}
+    /**
+     * Displays the given list of orders in the text area.
+     *
+     * If the list is empty, a message is shown instead.
+     *
+     * @param orders a list of orders to display
+     */
     public void showOrders(List<Order> orders) {
         if (orders.isEmpty()) {
             textArea.setText("No orders yet.");
