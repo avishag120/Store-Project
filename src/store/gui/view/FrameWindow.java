@@ -4,6 +4,7 @@
  * Avishag Almakies – ID 325684678
  */
 package store.gui.view;
+import store.Model.engine.StoreEngine;
 import store.gui.controler.StoreController;
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +23,7 @@ public class FrameWindow extends JFrame {
      * Initializes all GUI components, layouts and event listeners,
      * and connects the View to the StoreController.
      */
-    public FrameWindow() {
+    public FrameWindow(StoreEngine engine) {
         setTitle("Online Store");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
@@ -37,7 +38,7 @@ public class FrameWindow extends JFrame {
         StoreWindow storePanel = new StoreWindow(detailsPanel);
         add(storePanel, BorderLayout.CENTER);
         // Controller
-        StoreController controller = new StoreController(storePanel);
+        StoreController controller = new StoreController(storePanel, engine);
         storePanel.setController(controller);
         detailsPanel.setController(controller);
         // search, filter, buttons
@@ -101,16 +102,5 @@ public class FrameWindow extends JFrame {
         detailsPanel.setController(controller);
 
     }
-    /**
-     * The entry point of the application.
-     * Creates and displays the main window on the Event Dispatch Thread.
-     *
-     * @param args command-line arguments (not used)
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            FrameWindow frame = new FrameWindow();
-            frame.setVisible(true);
-        });
-    }
+
 }

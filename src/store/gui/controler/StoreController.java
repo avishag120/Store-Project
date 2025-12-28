@@ -38,9 +38,9 @@ public class StoreController {
      *
      * @param storeWindow the main store window that this controller controls
      */
-    public StoreController(StoreWindow storeWindow) {
+    public StoreController(StoreWindow storeWindow, StoreEngine engine) {
         this.storeWindow = storeWindow;
-        this.engine = new StoreEngine();
+        this.engine = engine;
         loadOrdersFromFile();
         }
     /**
