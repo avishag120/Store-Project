@@ -18,7 +18,8 @@ import java.util.List;
  */
 public class StoreEngine {
     /** List of all products in the store. */
-    private List<Product> products;
+    private List<Product> products= new ArrayList<>();
+    private boolean loaded=false;
 
     /** List of all orders that were created. */
     private List<Order> allOrders;
@@ -94,7 +95,13 @@ public class StoreEngine {
      */
     public void clearProducts() {
         products.clear();
+        loaded=false;
     }
-
+    public boolean isLoaded(){
+        return loaded;
+    }
+    public void setLoaded(boolean loaded){
+        this.loaded=loaded;
+    }
 
 }

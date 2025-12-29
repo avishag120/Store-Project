@@ -70,15 +70,18 @@ public class FrameWindow extends JFrame {
         });
         loadButton.addActionListener(e -> {
             controller.load(this);
+            Timer t = new Timer(500, ev -> {
+                searchField.removeAllItems();
+                searchField.addItem("ALL");
 
-            // Refresh search list after loading products
-            searchField.removeAllItems();
-            searchField.addItem("ALL");
-
-            for (store.Model.products.Product p : controller.getAllProducts()) {
-                searchField.addItem(p.getDisplayName());
-            }
+                for (store.Model.products.Product p : controller.getAllProducts()) {
+                    searchField.addItem(p.getDisplayName());
+                }
+            });
+            t.setRepeats(false);
+            t.start();
         });
+
         saveButton.addActionListener(e ->
                 controller.save(this)
         );

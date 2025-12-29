@@ -41,10 +41,13 @@ public class ProductDetailsPanel extends JPanel {
 
     /** Reference to the store controller. */
     private StoreController controller;
+    private JLabel statusLabel = new JLabel();
     /**
      * Creates a new ProductDetailsPanel and initializes
      * all UI components.
      */
+
+
     public ProductDetailsPanel() {
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -63,8 +66,12 @@ public class ProductDetailsPanel extends JPanel {
         addedLabel.setForeground(new Color(0, 140, 0));
         addedLabel.setVisible(false);
         addedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        statusLabel.setForeground(Color.RED);
+        statusLabel.setVisible(false);
+        statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         content.add(Box.createVerticalStrut(6));
         content.add(addedLabel);
+        content.add(statusLabel);
         add(content);
     }
     /**
@@ -79,12 +86,16 @@ public class ProductDetailsPanel extends JPanel {
         priceLabel.setText("Price: " + p.getPrice() + " ₪");
         stockLabel.setText("In stock: " + p.getStock());
         descriptionArea.setText(p.getDescription());
-
-        // Remove previous listeners to avoid duplicate actions
+        statusLabel.setVisible(false);
+        statusLabel.setText("");
         for (var l : addToCartButton.getActionListeners()) {
             addToCartButton.removeActionListener(l);
         }
         addToCartButton.addActionListener(e -> {
+            if (p.getStock() <= 0) {
+                showOutOfStockMessage();
+                return;
+            }
             controller.addToCart(p, 1);
             showAddedMessage();
         });
@@ -107,6 +118,14 @@ public class ProductDetailsPanel extends JPanel {
      */
     public void setController(StoreController controller) {
         this.controller = controller;
+    }
+    public void setStatusMessage(String msg) {
+        statusLabel.setText(msg);
+        statusLabel.setVisible(true);
+    }
+    public void showOutOfStockMessage() {
+        setStatusMessage("Cannot be added – product is out of stock");
+        statusLabel.setVisible(true);
     }
 
 

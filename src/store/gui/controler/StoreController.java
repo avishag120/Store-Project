@@ -71,107 +71,98 @@ public class StoreController {
      * @param frame parent frame used for dialogs (file chooser + messages)
      */
     public void load(JFrame frame) {
-
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(
-                new javax.swing.filechooser.FileNameExtensionFilter(
-                        "CSV files", "csv"
-                )
-        );
-        int result = chooser.showOpenDialog(frame);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        File file = chooser.getSelectedFile();
-        engine.clearProducts();
-        try (Scanner sc = new Scanner(file)) {
-
-            if (sc.hasNextLine()) {
-                sc.nextLine();
-            }
-
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-                String[] parts = line.split(",");
-
-                if (parts.length < 6) {
-                    continue;
-                }
-                String name = parts[0];
-                double price = Double.parseDouble(parts[1]);
-                int stock = Integer.parseInt(parts[2]);
-                String description = parts[3];
-                Category category = Category.valueOf(parts[4]);
-                String imagePath = parts[5];
-
-                Product p = null;
-
-                switch (category) {
-
-                    case CLOTHING:
-                        p = new store.Model.products.ClothingProduct(
-                                name,
-                                price,
-                                stock,
-                                description,
-                                category,
-                                java.awt.Color.BLUE,
-                                "M",
-                                imagePath
-                        );
-                        break;
-
-                    case BOOKS:
-                        p = new store.Model.products.BookProduct(
-                                name,
-                                price,
-                                stock,
-                                description,
-                                category,
-                                java.awt.Color.WHITE,
-                                "Unknown Author",
-                                0,
-                                imagePath
-                        );
-                        break;
-
-                    case ELECTRONICS:
-                        p = new store.Model.products.ElectronicsProduct(
-                                name,
-                                price,
-                                stock,
-                                description,
-                                category,
-                                java.awt.Color.BLACK,
-                                12,
-                                "Unknown Brand",
-                                imagePath
-                        );
-                        break;
-                }
-
-                if (p != null) {
-                    engine.addProduct(p);
+        new Thread(() -> {
+            synchronized(engine){
+                if(engine.isLoaded()){
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(frame,"Products already loaded");
+                        storeWindow.showProducts(engine.getAllProducts());
+                    });
+                    return;
                 }
             }
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(
+                    new javax.swing.filechooser.FileNameExtensionFilter("CSV files", "csv"));
+            if(chooser.showOpenDialog(frame)!=JFileChooser.APPROVE_OPTION) return;
+            File file=chooser.getSelectedFile();
+            try (Scanner sc = new Scanner(file)) {
+                if (sc.hasNextLine()) {
+                    sc.nextLine();
+                }
+                while(sc.hasNextLine()){
+                    String[] parts=sc.nextLine().split(",");
+                    if(parts.length<6) continue;
 
-            // הצגת המוצרים בקטלוג
-            storeWindow.showProducts(engine.getAllProducts());
+                    String name=parts[0];
+                    double price=Double.parseDouble(parts[1]);
+                    int stock=Integer.parseInt(parts[2]);
+                    String description=parts[3];
+                    Category category=Category.valueOf(parts[4]);
+                    String imagePath=parts[5];
 
-            JOptionPane.showMessageDialog(
-                    frame,
-                    "Products loaded successfully"
-            );
+                    Product p=null;
+                    switch (category) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(
-                    frame,
-                    e.toString() );
+                        case CLOTHING:
+                            p = new store.Model.products.ClothingProduct(
+                                    name,
+                                    price,
+                                    stock,
+                                    description,
+                                    category,
+                                    java.awt.Color.BLUE,
+                                    "M",
+                                    imagePath
+                            );
+                            break;
+
+                        case BOOKS:
+                            p = new store.Model.products.BookProduct(
+                                    name,
+                                    price,
+                                    stock,
+                                    description,
+                                    category,
+                                    java.awt.Color.WHITE,
+                                    "Unknown Author",
+                                    0,
+                                    imagePath
+                            );
+                            break;
+
+                        case ELECTRONICS:
+                            p = new store.Model.products.ElectronicsProduct(
+                                    name,
+                                    price,
+                                    stock,
+                                    description,
+                                    category,
+                                    java.awt.Color.BLACK,
+                                    12,
+                                    "Unknown Brand",
+                                    imagePath
+                            );
+                            break;
+                    }
+
+                    if (p != null) {
+                        engine.addProduct(p);
+                    }
+                }
+                engine.setLoaded(true);
+                SwingUtilities.invokeLater(() -> {
+                    storeWindow.showProducts(engine.getAllProducts());
+                    JOptionPane.showMessageDialog(frame,"Products loaded successfully");
+                });
+
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() ->
+                        JOptionPane.showMessageDialog(frame,e.toString())
+                );
+            }
         }
+        ).start();
     }
     /**
      * Saves all current products to a CSV file chosen by the user.
@@ -260,13 +251,26 @@ public class StoreController {
      * @param qty quantity to add (must be positive)
      */
     public void addToCart(Product product, int qty) {
-        if (product.getStock() >= qty) {
-            cart.addItem(product, qty);
-            product.decreaseStock(qty);
-            storeWindow.showProducts(engine.getAllProducts()); // רענון תצוגה
-        } else {
-            JOptionPane.showMessageDialog(null, "Not enough stock");
-        }
+        new Thread(() -> {
+            System.out.println(
+                    "Product hash: " + System.identityHashCode(product)
+            );
+            synchronized (product) {
+                if (product.getStock() >= qty) {
+                    cart.addItem(product, qty);
+                    product.decreaseStock(qty);
+                    SwingUtilities.invokeLater(() -> {
+                        storeWindow.showProducts(engine.getAllProducts());
+                        storeWindow.showProductDetails(product, null);
+                    });
+                } else {
+                    SwingUtilities.invokeLater(() ->
+                                    storeWindow.showOutOfStockMessage()
+                    );
+                }
+            }
+        }).start();
+
     }
     /**
      * Opens the cart window and shows current cart items.
@@ -283,31 +287,33 @@ public class StoreController {
      * If the cart is empty, a message is shown and nothing happens.
      */
     public void checkout() {
+        new Thread(() -> {
+            if (cart.getItems().isEmpty()) {
+                SwingUtilities.invokeLater(() ->
+                JOptionPane.showMessageDialog(null, "Cart is empty"));
+                return;
+            }
+            List<CartItem> snapshot = new ArrayList<>();
+            for (CartItem item : cart.getItems()) {
+                snapshot.add(
+                        new CartItem(item.getProduct(), item.getQuantity())
+                );
+            }
 
-        if (cart.getItems().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Cart is empty");
-            return;
-        }
-        List<CartItem> snapshot = new ArrayList<>();
-        for (CartItem item : cart.getItems()) {
-            snapshot.add(
-                    new CartItem(
-                            item.getProduct(),
-                            item.getQuantity()
-                    )
+            Order order = new Order(
+                    nextOrderId++,
+                    snapshot,
+                    cart.calculateTotal()
             );
-        }
+            synchronized (orderHistory) {
+                orderHistory.add(order);
+                appendOrderToFile(order);
 
-        Order order = new Order(
-                nextOrderId++,
-                snapshot,
-                cart.calculateTotal()
-        );
+            }
+            cart.clear();
+        }).start();
 
-        orderHistory.add(order);
-        appendOrderToFile(order);
 
-        cart.clear();
     }
     /**
      * Opens the order history window and displays the orders loaded/created.
@@ -329,7 +335,7 @@ public class StoreController {
      *
      * @param order the order to save
      */
-    private void appendOrderToFile(Order order) {
+    private synchronized  void appendOrderToFile(Order order) {
 
         File file = new File("orders_history.csv");
 

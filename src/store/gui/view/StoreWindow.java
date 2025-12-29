@@ -64,10 +64,9 @@ public class StoreWindow extends JPanel {
      */
     public void showProducts(List<Product> products) {
         removeAll();
-
         for (Product p : products) {
             JButton btn = new JButton(p.getDisplayName());
-            btn.setToolTipText(p.toString());
+            btn.setToolTipText("Name: "+p.getDisplayName()+" | Price: "+p.getPrice()+" | Stock: "+p.getStock());
             btn.setHorizontalTextPosition(SwingConstants.CENTER);
             btn.setVerticalTextPosition(SwingConstants.BOTTOM);
             String imagePath = "/images/" + p.getImagePath();
@@ -94,6 +93,10 @@ public class StoreWindow extends JPanel {
         revalidate();
         repaint();
     }
+    public void showOutOfStockMessage() {
+        detailsPanel.showOutOfStockMessage();
+    }
+
 
 
 
