@@ -12,21 +12,21 @@ public class MainController {
     private StoreController storeController;
 
     public MainController(StoreEngine engine) {
-        this.engine = new StoreEngine();
+        this.engine = engine;
         this.storeController = new StoreController(null, engine);
     }
     public void openCustomer() {
         SwingUtilities.invokeLater(() -> {
-            FrameWindow window = new FrameWindow(engine);
+            FrameWindow window = new FrameWindow(engine, storeController);
             window.setVisible(true);
         });
     }
     public void openManager() {
-        SwingUtilities.invokeLater(() ->
-                new ManagerWindow(storeController).setVisible(true)
-        );
+        SwingUtilities.invokeLater(() -> {
+            ManagerWindow window = new ManagerWindow(storeController);
+            window.setVisible(true);
+        });
     }
-
 
 }
 

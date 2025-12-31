@@ -51,7 +51,7 @@ public class ManagerWindow extends JFrame {
                     Color.WHITE,
                     "Admin",
                     0,
-                    "book.png"
+                    "default.png"
             );
 
             controller.managerAddProduct(p);

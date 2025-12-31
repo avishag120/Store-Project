@@ -18,14 +18,13 @@ import java.awt.*;
  * any business logic.
  */
 public class FrameWindow extends JFrame {
-    private StoreController controller;
-
+    private  StoreController controller;
     /**
      * Constructs the main application window.
      * Initializes all GUI components, layouts and event listeners,
      * and connects the View to the StoreController.
      */
-    public FrameWindow(StoreEngine engine) {
+    public FrameWindow(StoreEngine engine, StoreController controller) {
         setTitle("Online Store");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
@@ -39,9 +38,8 @@ public class FrameWindow extends JFrame {
         //Store catalog panel (center)
         StoreWindow storePanel = new StoreWindow(detailsPanel);
         add(storePanel, BorderLayout.CENTER);
-        // Controller
-        this.controller = new StoreController(storePanel, engine);
-
+        this.controller = controller;
+        controller.setStoreWindow(storePanel);
         storePanel.setController(controller);
         detailsPanel.setController(controller);
         // search, filter, buttons
@@ -106,19 +104,22 @@ public class FrameWindow extends JFrame {
         searchPanel.add(row2);
         add(searchPanel,BorderLayout.NORTH);
         detailsPanel.setController(controller);
+
         engine.addListener(() -> {
             SwingUtilities.invokeLater(() -> {
                 storePanel.showProducts(engine.getAllProducts());
-            });
-        });
-        engine.addProductListener(changedProduct -> {
-            SwingUtilities.invokeLater(() -> {
-                detailsPanel.refreshIfShowing(changedProduct);
-            });
-        });
-    }
-    public StoreController getController() {
-        return controller;
-    }
 
-}
+            });
+        });
+
+//        engine.addProductListener(changedProduct -> {
+//            SwingUtilities.invokeLater(() -> {
+//                detailsPanel.refreshIfShowing(changedProduct);
+//            });
+//        });
+//    }
+//    public StoreController getController() {
+//        return controller;
+//    }
+
+}}

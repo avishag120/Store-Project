@@ -71,6 +71,9 @@ public class StoreWindow extends JPanel {
             btn.setVerticalTextPosition(SwingConstants.BOTTOM);
             String imagePath = "/images/" + p.getImagePath();
             URL imageURL = getClass().getResource(imagePath);
+            if (imageURL == null) {
+                imageURL = getClass().getResource("/images/default.png");
+            }
             ImageIcon scaledIcon= null;
             if(imageURL != null){
                 ImageIcon icon = new ImageIcon(imageURL);

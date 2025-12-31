@@ -33,7 +33,7 @@ public class StoreEngine {
      * Creates a new store engine with empty lists.
      */
     private List<Runnable> listeners = new ArrayList<>();
-    private List<java.util.function.Consumer<Product>> productListeners = new ArrayList<>();
+//    private List<java.util.function.Consumer<Product>> productListeners = new ArrayList<>();
 
     public StoreEngine() {
         products = new ArrayList<>();
@@ -54,8 +54,8 @@ public class StoreEngine {
      *
      * @return list of products
      */
-    public List<Product> getAllProducts() {
-        return products;
+    public synchronized List<Product> getAllProducts() {
+        return new ArrayList<>(products);
     }
 
     /**
@@ -96,22 +96,21 @@ public class StoreEngine {
     public synchronized void addListener(Runnable r) {
         listeners.add(r);
     }
-
     public synchronized void notifyListeners() {
         for (Runnable r : listeners) {
             r.run();
         }
     }
 
-    public synchronized void addProductListener(java.util.function.Consumer<Product> l) {
-        productListeners.add(l);
-    }
+//    public synchronized void addProductListener(java.util.function.Consumer<Product> l) {
+//        productListeners.add(l);
+//    }
 
-    public synchronized void notifyProductListeners(Product changedProduct) {
-        for (var l : productListeners) {
-            l.accept(changedProduct);
-        }
-    }
+//    public synchronized void notifyProductListeners(Product changedProduct) {
+//        for (var l : productListeners) {
+//            l.accept(changedProduct);
+//        }
+//    }
     public void loadFromDefaultFile() {
         File file = new File("products.csv");
         if (!file.exists()) return;
