@@ -412,6 +412,49 @@ public class StoreController {
     public java.util.List<store.Model.products.Product> getAllProducts() {
         return engine.getAllProducts();
     }
+    /* =========================
+       MANAGER OPERATIONS
+       ========================= */
+
+    public synchronized void managerAddProduct(Product p) {
+        engine.addProduct(p);
+        saveToDefaultFile();
+        refreshProducts();
+        engine.notifyListeners();
+    }
+
+    public synchronized void managerUpdateStock(Product p, int amount) {
+        if (amount > 0) {
+            p.increaseStock(amount);
+        } else {
+            p.decreaseStock(-amount);
+        }
+        saveToDefaultFile();
+        refreshProducts();
+        engine.notifyProductListeners(p);
+        engine.notifyListeners();
+    }
+
+    private synchronized void saveToDefaultFile() {
+        try (java.io.PrintWriter pw = new java.io.PrintWriter("products.csv")) {
+
+            pw.println("name,price,stock,description,category,imagePath");
+
+            for (Product p : engine.getAllProducts()) {
+                pw.println(
+                        p.getDisplayName() + "," +
+                                p.getPrice() + "," +
+                                p.getStock() + "," +
+                                p.getDescription().replace(",", " ") + "," +
+                                p.getCategory() + "," +
+                                p.getImagePath()
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

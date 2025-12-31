@@ -1,11 +1,13 @@
 package store.gui.view;
 
 import store.gui.controler.MainController;
+import store.gui.controler.StoreController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
+
     public MainWindow(MainController controller) {
 
         setTitle("Store - Main Window");
@@ -43,4 +45,5 @@ public class MainWindow extends JFrame {
 
         add(mainPanel);
     }
+
 }

@@ -4,14 +4,17 @@
  * Avishag Almakaies – ID 325684678
  */
 package store.Model.engine;
-import store.Model.cart.Cart;
-import store.Model.cart.CartItem;
-import store.Model.core.Customer;
-import store.Model.orders.Order;
-import store.Model.products.Product;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.awt.Color;
+
+import store.Model.cart.Cart;
+import store.Model.cart.CartItem;
+import store.Model.orders.Order;
+import store.Model.products.*;
+
 /**
  * The main engine of the store system.
  * This class manages products, customers and orders.
@@ -36,6 +39,7 @@ public class StoreEngine {
         products = new ArrayList<>();
         allOrders = new ArrayList<>();
         nextOrderId = 1;
+        loadFromDefaultFile();
     }
     /**
      * Adds a product to the store.
@@ -108,6 +112,50 @@ public class StoreEngine {
             l.accept(changedProduct);
         }
     }
+    public void loadFromDefaultFile() {
+        File file = new File("products.csv");
+        if (!file.exists()) return;
+
+        products.clear();
+
+        try (Scanner sc = new Scanner(file)) {
+            if (sc.hasNextLine()) sc.nextLine(); // header
+
+            while (sc.hasNextLine()) {
+                String[] parts = sc.nextLine().split(",");
+                if (parts.length < 6) continue;
+
+                String name = parts[0];
+                double price = Double.parseDouble(parts[1]);
+                int stock = Integer.parseInt(parts[2]);
+                String description = parts[3];
+                Category category = Category.valueOf(parts[4]);
+                String imagePath = parts[5];
+
+                Product p = null;
+
+                switch (category) {
+                    case BOOKS ->
+                            p = new BookProduct(name, price, stock, description, category,
+                                    Color.WHITE, "Admin", 0, imagePath);
+                    case CLOTHING ->
+                            p = new ClothingProduct(name, price, stock, description, category,
+                                    Color.BLUE, "M", imagePath);
+                    case ELECTRONICS ->
+                            p = new ElectronicsProduct(name, price, stock, description, category,
+                                    Color.BLACK, 12, "Admin", imagePath);
+                }
+
+                if (p != null) products.add(p);
+            }
+
+            loaded = true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }
