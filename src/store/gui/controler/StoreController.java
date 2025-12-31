@@ -270,7 +270,8 @@ public class StoreController {
                 }
             }
         }).start();
-
+        engine.notifyListeners();
+        engine.notifyProductListeners(product);
     }
     /**
      * Opens the cart window and shows current cart items.

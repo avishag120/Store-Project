@@ -103,7 +103,15 @@ public class FrameWindow extends JFrame {
         searchPanel.add(row2);
         add(searchPanel,BorderLayout.NORTH);
         detailsPanel.setController(controller);
-
+        engine.addListener(() -> {
+            SwingUtilities.invokeLater(() -> {
+                storePanel.showProducts(engine.getAllProducts());
+            });
+        });
+        engine.addProductListener(changedProduct -> {
+            SwingUtilities.invokeLater(() -> {
+                detailsPanel.refreshIfShowing(changedProduct);
+            });
+        });
     }
-
 }

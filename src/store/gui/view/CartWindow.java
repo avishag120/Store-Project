@@ -96,12 +96,12 @@ public class CartWindow extends JFrame {
             JLabel qtyLabel = new JLabel(String.valueOf(item.getQuantity()));
             JButton plus = new JButton("+");
             JButton remove = new JButton("Remove");
-            remove.addActionListener(e -> {
-                int qty = item.getQuantity();
-                cart.removeItem(p);
-                p.increaseStock(qty);
-                showCart(cart);
-            });
+//            remove.addActionListener(e -> {
+//                int qty = item.getQuantity();
+//                cart.removeItem(p);
+//                p.increaseStock(qty);
+//                showCart(cart);
+//            });
             minus.addActionListener(e -> {
                 if (item.getQuantity() <= 1) {
                     cart.removeItem(p);
@@ -127,7 +127,7 @@ public class CartWindow extends JFrame {
                 int qty = item.getQuantity();
                 cart.removeItem(p);
                 p.increaseStock(qty);
-                controller.refreshProducts(); // ← גם כאן
+                controller.refreshProducts();
                 showCart(cart);
             });
             qtyPanel.add(minus);

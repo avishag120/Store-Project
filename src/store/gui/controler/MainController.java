@@ -3,8 +3,6 @@ package store.gui.controler;
 import store.Model.engine.StoreEngine;
 import store.gui.view.FrameWindow;
 import store.gui.view.ManagerWindow;
-import store.gui.view.ProductDetailsPanel;
-import store.gui.view.StoreWindow;
 
 import javax.swing.*;
 import java.awt.*;

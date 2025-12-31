@@ -42,6 +42,8 @@ public class ProductDetailsPanel extends JPanel {
     /** Reference to the store controller. */
     private StoreController controller;
     private JLabel statusLabel = new JLabel();
+    private Product currentProduct;
+
     /**
      * Creates a new ProductDetailsPanel and initializes
      * all UI components.
@@ -81,6 +83,7 @@ public class ProductDetailsPanel extends JPanel {
      * @param icon the product image icon
      */
     public void showProduct(Product p, ImageIcon icon) {
+        this.currentProduct = p;
         imageLabel.setIcon(icon);
         nameLabel.setText("Name: " + p.getDisplayName());
         priceLabel.setText("Price: " + p.getPrice() + " ₪");
@@ -126,6 +129,11 @@ public class ProductDetailsPanel extends JPanel {
     public void showOutOfStockMessage() {
         setStatusMessage("Cannot be added – product is out of stock");
         statusLabel.setVisible(true);
+    }
+    public void refreshIfShowing(Product changedProduct) {
+        if (currentProduct == changedProduct) {
+            stockLabel.setText("In stock: " + currentProduct.getStock());
+        }
     }
 
 
