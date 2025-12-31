@@ -24,17 +24,17 @@ public class StoreEngine {
     /** List of all orders that were created. */
     private List<Order> allOrders;
 
-    /** List of registered customers. */
-    private List<Customer> customers;
     /** Counter used for creating new order IDs. */
     private int nextOrderId;
     /**
      * Creates a new store engine with empty lists.
      */
+    private List<Runnable> listeners = new ArrayList<>();
+    private List<java.util.function.Consumer<Product>> productListeners = new ArrayList<>();
+
     public StoreEngine() {
         products = new ArrayList<>();
         allOrders = new ArrayList<>();
-        customers = new ArrayList<>();
         nextOrderId = 1;
     }
     /**
@@ -53,21 +53,7 @@ public class StoreEngine {
     public List<Product> getAllProducts() {
         return products;
     }
-    /**
-     * Registers a new customer, unless a customer with the same username exists.
-     *
-     * @param c the customer to register
-     * @return true if registered, false if already exists
-     */
-    public boolean registerCustomer(Customer c) {
-        for(Customer existing: customers) {
-            if (existing.equals(c)){
-                return false;
-            }
-        }
-        customers.add(c);
-        return true;
-    }
+
     /**
      * Creates a new order from the items in a customer's cart.
      *
@@ -103,5 +89,25 @@ public class StoreEngine {
     public void setLoaded(boolean loaded){
         this.loaded=loaded;
     }
+    public synchronized void addListener(Runnable r) {
+        listeners.add(r);
+    }
+
+    public synchronized void notifyListeners() {
+        for (Runnable r : listeners) {
+            r.run();
+        }
+    }
+
+    public synchronized void addProductListener(java.util.function.Consumer<Product> l) {
+        productListeners.add(l);
+    }
+
+    public synchronized void notifyProductListeners(Product changedProduct) {
+        for (var l : productListeners) {
+            l.accept(changedProduct);
+        }
+    }
+
 
 }
