@@ -130,11 +130,18 @@ public class ProductDetailsPanel extends JPanel {
         setStatusMessage("Cannot be added – product is out of stock");
         statusLabel.setVisible(true);
     }
-    public void refreshIfShowing(Product changedProduct) {
-        if (currentProduct == changedProduct) {
-            stockLabel.setText("In stock: " + currentProduct.getStock());
-        }
+//    public void refreshIfShowing(Product changedProduct) {
+//        if (currentProduct == changedProduct) {
+//            stockLabel.setText("In stock: " + currentProduct.getStock());
+//        }
+//    }
+public void refreshIfShowing() {
+    if (currentProduct != null) {
+        stockLabel.setText("In stock: " + currentProduct.getStock());
     }
+}
+
+
 
 
 }

@@ -5,25 +5,28 @@ import store.gui.view.FrameWindow;
 import store.gui.view.ManagerWindow;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class MainController {
+
     private StoreEngine engine;
+    private StoreController storeController;
 
     public MainController(StoreEngine engine) {
         this.engine = engine;
+        this.storeController = new StoreController(null, engine);
     }
-
     public void openCustomer() {
-        new Thread(() -> {
-            FrameWindow window = new FrameWindow(engine);
+        SwingUtilities.invokeLater(() -> {
+            FrameWindow window = new FrameWindow(engine, storeController);
             window.setVisible(true);
-        }).start();
+        });
+    }
+    public void openManager() {
+        SwingUtilities.invokeLater(() -> {
+            ManagerWindow window = new ManagerWindow(storeController);
+            window.setVisible(true);
+        });
     }
 
-    public void openManager() {
-        new Thread(() -> {
-            new ManagerWindow().setVisible(true);
-        }).start();
-    }
 }
+

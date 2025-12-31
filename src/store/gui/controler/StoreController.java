@@ -76,7 +76,10 @@ public class StoreController {
                 if(engine.isLoaded()){
                     SwingUtilities.invokeLater(() -> {
                         JOptionPane.showMessageDialog(frame,"Products already loaded");
-                        storeWindow.showProducts(engine.getAllProducts());
+                        if (storeWindow != null) {
+                            storeWindow.showProducts(engine.getAllProducts());
+                        }
+
                     });
                     return;
                 }
@@ -271,7 +274,7 @@ public class StoreController {
             }
         }).start();
         engine.notifyListeners();
-        engine.notifyProductListeners(product);
+//        engine.notifyProductListeners(product);
     }
     /**
      * Opens the cart window and shows current cart items.
@@ -328,7 +331,9 @@ public class StoreController {
      * Refreshes the catalog products view (useful after stock changes or loading data).
      */
     public void refreshProducts() {
-        storeWindow.showProducts(engine.getAllProducts());
+        if (storeWindow != null) {
+            storeWindow.showProducts(engine.getAllProducts());
+        }
     }
     /**
      * Appends one order to a local CSV file named "orders_history.csv".
@@ -412,6 +417,54 @@ public class StoreController {
     public java.util.List<store.Model.products.Product> getAllProducts() {
         return engine.getAllProducts();
     }
+    private synchronized void saveToDefaultFile() {
+        try (java.io.PrintWriter pw = new java.io.PrintWriter("products.csv")) {
+
+            pw.println("name,price,stock,description,category,imagePath");
+
+            for (Product p : engine.getAllProducts()) {
+                pw.println(
+                        p.getDisplayName() + "," +
+                                p.getPrice() + "," +
+                                p.getStock() + "," +
+                                p.getDescription().replace(",", " ") + "," +
+                                p.getCategory() + "," +
+                                p.getImagePath()
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void managerAddProduct(Product p) {
+        synchronized (engine) {
+            engine.addProduct(p);
+            saveToDefaultFile();
+        }
+
+        SwingUtilities.invokeLater(() -> {
+            engine.notifyListeners();
+        });
+    }
+    public void managerUpdateStock(Product p, int amount) {
+        synchronized (p) {
+            if (amount > 0) {
+                p.increaseStock(amount);
+            } else {
+                p.decreaseStock(-amount);
+            }
+            saveToDefaultFile();
+        }
+
+        SwingUtilities.invokeLater(() -> {
+            engine.notifyListeners();
+        });
+    }
+    public void setStoreWindow(StoreWindow storeWindow) {
+        this.storeWindow = storeWindow;
+    }
+
 
 
 
