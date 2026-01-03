@@ -122,24 +122,30 @@ public class ProductDetailsPanel extends JPanel {
     public void setController(StoreController controller) {
         this.controller = controller;
     }
+    /**
+     * Displays a status message in the product details panel.
+     *
+     * The message is shown using the status label
+     * and is typically used to present error or warning messages
+     * to the user (e.g., out-of-stock notifications).
+     *
+     * @param msg the message to display
+     */
     public void setStatusMessage(String msg) {
         statusLabel.setText(msg);
         statusLabel.setVisible(true);
     }
+    /**
+     * Displays a predefined message indicating that the product
+     * cannot be added to the cart because it is out of stock.
+     *
+     * This method is usually called when the user attempts
+     * to add a product with zero available stock.
+     */
     public void showOutOfStockMessage() {
         setStatusMessage("Cannot be added – product is out of stock");
         statusLabel.setVisible(true);
     }
-//    public void refreshIfShowing(Product changedProduct) {
-//        if (currentProduct == changedProduct) {
-//            stockLabel.setText("In stock: " + currentProduct.getStock());
-//        }
-//    }
-public void refreshIfShowing() {
-    if (currentProduct != null) {
-        stockLabel.setText("In stock: " + currentProduct.getStock());
-    }
-}
 
 
 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.awt.Color;
-
 import store.Model.cart.Cart;
 import store.Model.cart.CartItem;
 import store.Model.orders.Order;
@@ -33,7 +32,6 @@ public class StoreEngine {
      * Creates a new store engine with empty lists.
      */
     private List<Runnable> listeners = new ArrayList<>();
-//    private List<java.util.function.Consumer<Product>> productListeners = new ArrayList<>();
 
     public StoreEngine() {
         products = new ArrayList<>();
@@ -83,56 +81,73 @@ public class StoreEngine {
      * Removes all products from the store.
      * Used by the controller before loading products from file.
      */
-    public void clearProducts() {
-        products.clear();
-        loaded=false;
-    }
     public boolean isLoaded(){
         return loaded;
     }
+    /**
+     * Sets the loaded state of the product list.
+     *
+     * This flag is used to prevent loading products multiple times
+     * from a file during runtime.
+     *
+     * @param loaded true if products were loaded successfully
+     */
     public void setLoaded(boolean loaded){
         this.loaded=loaded;
     }
+    /**
+     * Registers a listener that will be notified
+     * when the product list or stock changes.
+     *
+     * Listeners are typically GUI components that need
+     * to refresh their display when the store data changes.
+     *
+     * @param r a Runnable listener to be executed on updates
+     */
     public synchronized void addListener(Runnable r) {
         listeners.add(r);
     }
+    /**
+     * Notifies all registered listeners about a change
+     * in the store state.
+     *
+     * This method is called after actions such as:
+     * - Adding a product
+     * - Updating stock
+     * - Loading products from file
+     */
     public synchronized void notifyListeners() {
         for (Runnable r : listeners) {
             r.run();
         }
     }
-
-//    public synchronized void addProductListener(java.util.function.Consumer<Product> l) {
-//        productListeners.add(l);
-//    }
-
-//    public synchronized void notifyProductListeners(Product changedProduct) {
-//        for (var l : productListeners) {
-//            l.accept(changedProduct);
-//        }
-//    }
+    /**
+     * Loads products from the default CSV file ("products.csv").
+     *
+     * The method clears the current product list and reads
+     * products line by line from the file.
+     *
+     * Expected CSV format:
+     * name,price,stock,description,category,imagePath
+     *
+     * If the file does not exist, the method exits silently.
+     */
     public void loadFromDefaultFile() {
         File file = new File("products.csv");
         if (!file.exists()) return;
-
         products.clear();
-
         try (Scanner sc = new Scanner(file)) {
             if (sc.hasNextLine()) sc.nextLine(); // header
-
             while (sc.hasNextLine()) {
                 String[] parts = sc.nextLine().split(",");
                 if (parts.length < 6) continue;
-
                 String name = parts[0];
                 double price = Double.parseDouble(parts[1]);
                 int stock = Integer.parseInt(parts[2]);
                 String description = parts[3];
                 Category category = Category.valueOf(parts[4]);
                 String imagePath = parts[5];
-
                 Product p = null;
-
                 switch (category) {
                     case BOOKS ->
                             p = new BookProduct(name, price, stock, description, category,
@@ -144,12 +159,9 @@ public class StoreEngine {
                             p = new ElectronicsProduct(name, price, stock, description, category,
                                     Color.BLACK, 12, "Admin", imagePath);
                 }
-
                 if (p != null) products.add(p);
             }
-
             loaded = true;
-
         } catch (Exception e) {
             e.printStackTrace();
         }

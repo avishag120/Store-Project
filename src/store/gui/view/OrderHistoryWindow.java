@@ -1,7 +1,10 @@
+/**
+ * Submitted by:
+ * Maayan Gueta – ID 327554143
+ * Avishag Almakaies – ID 325684678
+ */
 package store.gui.view;
-
 import store.Model.orders.Order;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
  */
 
 public class OrderHistoryWindow extends JFrame {
-    /** Text area used to display the orders information. */
+    /** Text area used to display the order information. */
     private JTextArea textArea;
 
     /**

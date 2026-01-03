@@ -96,12 +96,6 @@ public class CartWindow extends JFrame {
             JLabel qtyLabel = new JLabel(String.valueOf(item.getQuantity()));
             JButton plus = new JButton("+");
             JButton remove = new JButton("Remove");
-//            remove.addActionListener(e -> {
-//                int qty = item.getQuantity();
-//                cart.removeItem(p);
-//                p.increaseStock(qty);
-//                showCart(cart);
-//            });
             minus.addActionListener(e -> {
                 if (item.getQuantity() <= 1) {
                     cart.removeItem(p);

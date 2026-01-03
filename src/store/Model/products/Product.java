@@ -5,7 +5,6 @@
  */
 package store.Model.products;
 import store.Model.core.*;
-
 import java.awt.Color;
 /**
  * Base class for all products in the store.
@@ -108,7 +107,7 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
      */
     @Override
     public void saveToFile(String path) {
-        //     נשאיר ריק כרגע
+
     }
     /**
      * Returns product details as text.
@@ -123,7 +122,6 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
                 + "<b>Category:</b> " + category
                 + "</html>";
     }
-
     /**
      * Checks if two products are the same.
      * Products are equal if they have the same name and category.

@@ -19,13 +19,10 @@ import java.util.List;
  * in the ProductDetailsPanel.
  */
 public class StoreWindow extends JPanel {
-
     /** Panel used to display details of the selected product. */
     private ProductDetailsPanel detailsPanel;
-
     /** Reference to the store controller. */
     private StoreController controller;
-
     /**
      * Creates a new StoreWindow.
      *
@@ -96,6 +93,10 @@ public class StoreWindow extends JPanel {
         revalidate();
         repaint();
     }
+    /**
+     * Displays an out-of-stock message
+     * in the product details panel.
+     */
     public void showOutOfStockMessage() {
         detailsPanel.showOutOfStockMessage();
     }

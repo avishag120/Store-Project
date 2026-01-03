@@ -274,7 +274,6 @@ public class StoreController {
             }
         }).start();
         engine.notifyListeners();
-//        engine.notifyProductListeners(product);
     }
     /**
      * Opens the cart window and shows current cart items.
@@ -344,16 +343,12 @@ public class StoreController {
     private synchronized  void appendOrderToFile(Order order) {
 
         File file = new File("orders_history.csv");
-
         boolean writeHeader = !file.exists();
-
         try (java.io.FileWriter fw = new java.io.FileWriter(file, true);
              java.io.PrintWriter pw = new java.io.PrintWriter(fw)) {
-
             if (writeHeader) {
                 pw.println("orderId,totalAmount,items");
             }
-
             StringBuilder itemsText = new StringBuilder();
             for (store.Model.cart.CartItem item : order.getItems()) {
                 itemsText.append(item.getProduct().getDisplayName())
@@ -361,7 +356,6 @@ public class StoreController {
                         .append(item.getQuantity())
                         .append("; ");
             }
-
             pw.println(
                     order.getOrderID() + "," +
                             order.getTotalAmount() + "," +
@@ -380,22 +374,16 @@ public class StoreController {
     private void loadOrdersFromFile() {
         File file = new File("orders_history.csv");
         if (!file.exists()) return;
-
         try (Scanner sc = new Scanner(file)) {
-
             if (sc.hasNextLine()) sc.nextLine();
-
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
                 if (line.trim().isEmpty()) continue;
-
                 String[] parts = line.split(",", 3);
                 if (parts.length < 3) continue;
-
                 int orderId = Integer.parseInt(parts[0]);
                 double total = Double.parseDouble(parts[1]);
                 String itemsText = parts[2].replace("\"", "");
-
                 Order order = new Order(orderId, itemsText, total);
                 order.setItemsText(itemsText);
                 orderHistory.add(order);
@@ -413,15 +401,21 @@ public class StoreController {
      *
      * @return list of all products in the store
      */
-
     public java.util.List<store.Model.products.Product> getAllProducts() {
         return engine.getAllProducts();
     }
+    /**
+     * Saves the current list of products to the default CSV file ("products.csv").
+     *
+     * The method overwrites the file and writes all products
+     * currently stored in the engine.
+     *
+     * This method is synchronized to prevent concurrent writes
+     * to the file from multiple threads.
+     */
     private synchronized void saveToDefaultFile() {
         try (java.io.PrintWriter pw = new java.io.PrintWriter("products.csv")) {
-
             pw.println("name,price,stock,description,category,imagePath");
-
             for (Product p : engine.getAllProducts()) {
                 pw.println(
                         p.getDisplayName() + "," +
@@ -437,16 +431,40 @@ public class StoreController {
             e.printStackTrace();
         }
     }
+    /**
+     * Adds a new product to the store as a manager action.
+     *
+     * The operation is synchronized on the engine to ensure
+     * thread-safe modification of the shared products list.
+     *
+     * After adding the product, the updated state is saved
+     * to the default file and all listeners are notified
+     * to refresh their views.
+     *
+     * @param p the product to add
+     */
     public void managerAddProduct(Product p) {
         synchronized (engine) {
             engine.addProduct(p);
             saveToDefaultFile();
         }
-
         SwingUtilities.invokeLater(() -> {
             engine.notifyListeners();
         });
     }
+    /**
+     * Updates the stock amount of an existing product.
+     *
+     * The update is synchronized on the product instance
+     * to prevent concurrent stock modifications.
+     *
+     * After updating the stock, the new state is saved
+     * to the default file and all listeners are notified
+     * so all open windows reflect the change immediately.
+     *
+     * @param p the product to update
+     * @param amount the amount to add (positive) or remove (negative)
+     */
     public void managerUpdateStock(Product p, int amount) {
         synchronized (p) {
             if (amount > 0) {
@@ -456,11 +474,19 @@ public class StoreController {
             }
             saveToDefaultFile();
         }
-
         SwingUtilities.invokeLater(() -> {
             engine.notifyListeners();
         });
     }
+    /**
+     * Sets the store window associated with this controller.
+     *
+     * This method is used to connect the controller to
+     * a specific StoreWindow instance, allowing the controller
+     * to refresh the catalog view when data changes.
+     *
+     * @param storeWindow the StoreWindow to control
+     */
     public void setStoreWindow(StoreWindow storeWindow) {
         this.storeWindow = storeWindow;
     }
