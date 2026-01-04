@@ -104,14 +104,14 @@ public class CartWindow extends JFrame {
                     item.decrease();
                     p.increaseStock(1);
                 }
-                controller.refreshProducts();
+                controller.notifyStockChanged();
                 showCart(cart);
             });
             plus.addActionListener(e -> {
                 if (p.getStock() > 0) {
                     item.increase();
                     p.decreaseStock(1);
-                    controller.refreshProducts();
+                    controller.notifyStockChanged();
                     showCart(cart);
                 } else {
                     JOptionPane.showMessageDialog(this, "No more stock");
@@ -121,7 +121,7 @@ public class CartWindow extends JFrame {
                 int qty = item.getQuantity();
                 cart.removeItem(p);
                 p.increaseStock(qty);
-                controller.refreshProducts();
+                controller.notifyStockChanged();
                 showCart(cart);
             });
             qtyPanel.add(minus);

@@ -26,7 +26,7 @@ public class FrameWindow extends JFrame {
      */
     public FrameWindow(StoreEngine engine, StoreController controller) {
         setTitle("Online Store");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(900, 600);
         setLayout(new BorderLayout());
         // Product details panel
@@ -108,18 +108,10 @@ public class FrameWindow extends JFrame {
         engine.addListener(() -> {
             SwingUtilities.invokeLater(() -> {
                 storePanel.showProducts(engine.getAllProducts());
-
+                detailsPanel.refreshIfShowing();
             });
         });
 
-//        engine.addProductListener(changedProduct -> {
-//            SwingUtilities.invokeLater(() -> {
-//                detailsPanel.refreshIfShowing(changedProduct);
-//            });
-//        });
-//    }
-//    public StoreController getController() {
-//        return controller;
-//    }
+
 
 }}

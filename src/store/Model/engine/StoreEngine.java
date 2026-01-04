@@ -37,7 +37,6 @@ public class StoreEngine {
         products = new ArrayList<>();
         allOrders = new ArrayList<>();
         nextOrderId = 1;
-        loadFromDefaultFile();
     }
     /**
      * Adds a product to the store.

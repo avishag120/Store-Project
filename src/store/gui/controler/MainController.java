@@ -17,8 +17,6 @@ import javax.swing.*;
 public class MainController {
     /** Shared store engine used by all windows. */
     private StoreEngine engine;
-    /** Main store controller shared between customer and manager windows. */
-    private StoreController storeController;
 
     /**
      * Creates the main controller of the application.
@@ -27,7 +25,6 @@ public class MainController {
      */
     public MainController(StoreEngine engine) {
         this.engine = engine;
-        this.storeController = new StoreController(null, engine);
     }
     /**
      * Opens a new customer window.
@@ -35,7 +32,10 @@ public class MainController {
      */
     public void openCustomer() {
         SwingUtilities.invokeLater(() -> {
-            FrameWindow window = new FrameWindow(engine, storeController);
+            StoreController controller =
+                    new StoreController(null, engine);
+            FrameWindow window =
+                    new FrameWindow(engine, controller);
             window.setVisible(true);
         });
     }
@@ -45,7 +45,10 @@ public class MainController {
      */
     public void openManager() {
         SwingUtilities.invokeLater(() -> {
-            ManagerWindow window = new ManagerWindow(storeController);
+            StoreController managerController =
+                    new StoreController(null, engine);
+            ManagerWindow window =
+                    new ManagerWindow(managerController);
             window.setVisible(true);
         });
     }

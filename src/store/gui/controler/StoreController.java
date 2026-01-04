@@ -255,9 +255,6 @@ public class StoreController {
      */
     public void addToCart(Product product, int qty) {
         new Thread(() -> {
-            System.out.println(
-                    "Product hash: " + System.identityHashCode(product)
-            );
             synchronized (product) {
                 if (product.getStock() >= qty) {
                     cart.addItem(product, qty);
@@ -489,6 +486,9 @@ public class StoreController {
      */
     public void setStoreWindow(StoreWindow storeWindow) {
         this.storeWindow = storeWindow;
+    }
+    public void notifyStockChanged() {
+        engine.notifyListeners();
     }
 
 

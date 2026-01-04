@@ -1,13 +1,14 @@
 name,price,stock,description,category,imagePath
 T-Shirt,59.9,15,Cotton shirt,CLOTHING,shirt.png
 Jeans,129.9,10,Blue denim jeans,CLOTHING,jeans.png
-Jacket,249.9,1,Winter jacket,CLOTHING,jacket.png
+Jacket,249.9,3,Winter jacket,CLOTHING,jacket.png
 Dress,179.9,8,Summer dress,CLOTHING,dress.png
 iPhone 15,3999.9,5,Apple smartphone,ELECTRONICS,iphone.png
 Laptop Pro,5999.9,4,High performance laptop,ELECTRONICS,laptop.png
 Headphones,299.9,18,Wireless headphones,ELECTRONICS,headphones.png
-Smart Watch,899.9,7,Fitness smart watch,ELECTRONICS,smartwatch.png
+Smart Watch,899.9,4,Fitness smart watch,ELECTRONICS,smartwatch.png
 Clean Code,99.9,10,Software engineering book,BOOKS,book.png
 Design Patterns,119.9,6,Design patterns book,BOOKS,book.png
 Java Basics,79.9,15,Beginner Java book,BOOKS,book.png
 Algorithms,149.9,5,Algorithms and data structures,BOOKS,book.png
+
