@@ -28,6 +28,8 @@ public class CartWindow extends JFrame {
     private JButton checkoutButton;
     /** Controller used to call actions like checkout and refresh products. */
     private StoreController controller;
+    private JLabel discountLabel;
+
 
 
     /**
@@ -46,6 +48,8 @@ public class CartWindow extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
         JPanel bottomPanel = new JPanel(new BorderLayout());
         totalLabel = new JLabel("Total: 0 ₪");
+        discountLabel = new JLabel("");
+        discountLabel.setForeground(Color.GRAY);
         checkoutButton = new JButton("Checkout");
         checkoutButton.addActionListener(e -> {
             controller.checkout();
@@ -55,6 +59,12 @@ public class CartWindow extends JFrame {
         bottomPanel.add(totalLabel, BorderLayout.WEST);
         bottomPanel.add(checkoutButton, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
+        JPanel bottomLeft = new JPanel();
+        bottomLeft.setLayout(new BoxLayout(bottomLeft, BoxLayout.Y_AXIS));
+        bottomLeft.add(totalLabel);
+        bottomLeft.add(discountLabel);
+        bottomPanel.add(bottomLeft, BorderLayout.WEST);
+
     }
     /**
      * Displays the current cart items in the window.
@@ -133,8 +143,19 @@ public class CartWindow extends JFrame {
             itemsPanel.add(Box.createVerticalStrut(8));
         }
         totalLabel.setText(
-                String.format("Total: %.2f ₪", cart.calculateTotal())
+                String.format("Total: %.2f ₪",controller.getCartTotalAfterDiscount())
+
         );
+        String discountName = controller.getEngine()
+                .getDiscountStrategy()
+                .getName();
+
+        if (discountName.equals("NoDiscount")) {
+            discountLabel.setText("No discount applied");
+        } else {
+            discountLabel.setText("Discount applied: " + discountName);
+        }
+
         itemsPanel.revalidate();
         itemsPanel.repaint();
     }

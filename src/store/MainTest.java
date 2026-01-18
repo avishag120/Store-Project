@@ -8,6 +8,7 @@ import store.Model.engine.StoreEngine;
 import store.gui.controler.MainController;
 import store.gui.view.MainWindow;
 import javax.swing.SwingUtilities;
+
 /**
  * MainTest is the entry point of the store application.
  *
@@ -21,11 +22,13 @@ public class MainTest {
      * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
-        StoreEngine engine = new StoreEngine();
+
+        StoreEngine engine = StoreEngine.getInstance();
         MainController controller = new MainController(engine);
         SwingUtilities.invokeLater(() -> {
             new MainWindow(controller).setVisible(true);
         });
+
     }
 }
 

@@ -48,7 +48,7 @@ public class MainController {
             StoreController managerController =
                     new StoreController(null, engine);
             ManagerWindow window =
-                    new ManagerWindow(managerController);
+                    ManagerWindow.getInstance(managerController);
             window.setVisible(true);
         });
     }

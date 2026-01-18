@@ -5,9 +5,11 @@
  */
 package store.gui.controler;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import store.Model.cart.CartItem;
 import store.Model.products.Product;
+import store.Model.products.ProductFactory;
 import store.gui.view.CartWindow;
 import store.gui.view.StoreWindow;
 import store.Model.engine.StoreEngine;
@@ -18,6 +20,11 @@ import store.Model.orders.Order;
 import java.util.ArrayList;
 import java.util.List;
 import store.gui.view.OrderHistoryWindow;
+import store.Model.products.ProductBuilder;
+import store.Model.shipping.ShippingProvider;
+import store.Model.shipping.FastShipAdapter;
+import store.Model.discount.DiscountStrategy;
+
 
 
 public class StoreController {
@@ -31,6 +38,7 @@ public class StoreController {
     private List<Order> orderHistory = new ArrayList<>();
     /** Next order id to use when creating a new order. */
     private int nextOrderId = 1;
+    private final ShippingProvider shippingProvider = new FastShipAdapter();
 
 
     /**
@@ -104,50 +112,41 @@ public class StoreController {
                     Category category=Category.valueOf(parts[4]);
                     String imagePath=parts[5];
 
-                    Product p=null;
+                    ProductFactory factory = new ProductFactory();
+
+                    ProductBuilder b = new ProductBuilder();
+                    b.setName(name);
+                    b.setPrice(price);
+                    b.setStock(stock);
+                    b.setDescription(description);
+                    b.setCategory(category);
+                    b.setImagePath(imagePath);
+
+                    Product p = null;
+
                     switch (category) {
 
                         case CLOTHING:
-                            p = new store.Model.products.ClothingProduct(
-                                    name,
-                                    price,
-                                    stock,
-                                    description,
-                                    category,
-                                    java.awt.Color.BLUE,
-                                    "M",
-                                    imagePath
-                            );
+                            b.setColor(Color.BLUE);
+                            b.setSize("M");
+                            p = factory.createProduct("clothing", b);
                             break;
 
                         case BOOKS:
-                            p = new store.Model.products.BookProduct(
-                                    name,
-                                    price,
-                                    stock,
-                                    description,
-                                    category,
-                                    java.awt.Color.WHITE,
-                                    "Unknown Author",
-                                    0,
-                                    imagePath
-                            );
+                            b.setColor(Color.WHITE);
+                            b.setAuthor("Unknown Author");
+                            b.setPage(0);
+                            p = factory.createProduct("book", b);
                             break;
 
                         case ELECTRONICS:
-                            p = new store.Model.products.ElectronicsProduct(
-                                    name,
-                                    price,
-                                    stock,
-                                    description,
-                                    category,
-                                    java.awt.Color.BLACK,
-                                    12,
-                                    "Unknown Brand",
-                                    imagePath
-                            );
+                            b.setColor(Color.BLACK);
+                            b.setWarrantyMonths(12);
+                            b.setBrand("Unknown Brand");
+                            p = factory.createProduct("electronics", b);
                             break;
                     }
+
 
                     if (p != null) {
                         engine.addProduct(p);
@@ -279,6 +278,7 @@ public class StoreController {
         CartWindow window = new CartWindow();
         window.setController(this);
         window.showCart(cart);
+        engine.addListener(() -> SwingUtilities.invokeLater(() -> window.showCart(cart)));
         window.setVisible(true);
     }
     /**
@@ -308,6 +308,8 @@ public class StoreController {
             synchronized (orderHistory) {
                 orderHistory.add(order);
                 appendOrderToFile(order);
+                shippingProvider.shipOrder(order);
+
 
             }
             cart.clear();
@@ -323,14 +325,6 @@ public class StoreController {
         window.setVisible(true);
     }
 
-    /**
-     * Refreshes the catalog products view (useful after stock changes or loading data).
-     */
-    public void refreshProducts() {
-        if (storeWindow != null) {
-            storeWindow.showProducts(engine.getAllProducts());
-        }
-    }
     /**
      * Appends one order to a local CSV file named "orders_history.csv".
      * If the file does not exist, it creates it and writes the header line.
@@ -490,6 +484,22 @@ public class StoreController {
     public void notifyStockChanged() {
         engine.notifyListeners();
     }
+    public StoreEngine getEngine() {
+        return engine;
+    }
+
+    public List<Order> getOrderHistory() {
+        return orderHistory;
+    }
+    public double getCartTotalAfterDiscount() {
+        double total = cart.calculateTotal();
+        return engine.getDiscountStrategy().apply(total);
+    }
+
+    public void setDiscountStrategy(DiscountStrategy s) {
+        engine.setDiscountStrategy(s);
+    }
+
 
 
 

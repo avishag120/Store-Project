@@ -145,7 +145,21 @@ public abstract class Product implements Persistable,StockManageable,PricedItem,
     public Category getCategory() {
         return category;
     }
-
+    public void setStock(int stock){
+            this.stock=stock;
+    }
+    public void setDescription(String description){
+            this.description=description;
+    }
+    public void setCategory(Category category){
+            this.category=category;
+    }
+    public void setColor(java.awt.Color color){
+            this.color=color;
+    }
+    public void  setImagePath(String imagePath){
+            this.imagePath=imagePath;
+    }
 
 
 

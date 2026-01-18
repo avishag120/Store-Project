@@ -13,6 +13,9 @@ import store.Model.cart.Cart;
 import store.Model.cart.CartItem;
 import store.Model.orders.Order;
 import store.Model.products.*;
+import store.Model.discount.DiscountStrategy;
+import store.Model.discount.NoDiscount;
+
 
 /**
  * The main engine of the store system.
@@ -32,8 +35,10 @@ public class StoreEngine {
      * Creates a new store engine with empty lists.
      */
     private List<Runnable> listeners = new ArrayList<>();
+    private DiscountStrategy discountStrategy = new NoDiscount();
+    static private StoreEngine instance=null;
 
-    public StoreEngine() {
+    private StoreEngine() {
         products = new ArrayList<>();
         allOrders = new ArrayList<>();
         nextOrderId = 1;
@@ -45,6 +50,7 @@ public class StoreEngine {
      */
     public void addProduct(Product p) {
         products.add(p);
+        notifyListeners();
     }
     /**
      * Returns all products in the store.
@@ -131,39 +137,26 @@ public class StoreEngine {
      *
      * If the file does not exist, the method exits silently.
      */
-    public void loadFromDefaultFile() {
-        File file = new File("products.csv");
-        if (!file.exists()) return;
-        products.clear();
-        try (Scanner sc = new Scanner(file)) {
-            if (sc.hasNextLine()) sc.nextLine(); // header
-            while (sc.hasNextLine()) {
-                String[] parts = sc.nextLine().split(",");
-                if (parts.length < 6) continue;
-                String name = parts[0];
-                double price = Double.parseDouble(parts[1]);
-                int stock = Integer.parseInt(parts[2]);
-                String description = parts[3];
-                Category category = Category.valueOf(parts[4]);
-                String imagePath = parts[5];
-                Product p = null;
-                switch (category) {
-                    case BOOKS ->
-                            p = new BookProduct(name, price, stock, description, category,
-                                    Color.WHITE, "Admin", 0, imagePath);
-                    case CLOTHING ->
-                            p = new ClothingProduct(name, price, stock, description, category,
-                                    Color.BLUE, "M", imagePath);
-                    case ELECTRONICS ->
-                            p = new ElectronicsProduct(name, price, stock, description, category,
-                                    Color.BLACK, 12, "Admin", imagePath);
+    public static StoreEngine getInstance(){
+        if(instance==null)
+            synchronized (StoreEngine.class){
+                if(instance==null){
+                    instance=new StoreEngine();
                 }
-                if (p != null) products.add(p);
             }
-            loaded = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        return instance;
+
+
+    }
+    public synchronized DiscountStrategy getDiscountStrategy() {
+        return discountStrategy;
+    }
+
+    public synchronized void setDiscountStrategy(DiscountStrategy discountStrategy) {
+        if (discountStrategy == null) return;
+        this.discountStrategy = discountStrategy;
+        notifyListeners();
     }
 
 

@@ -29,7 +29,7 @@ public class BookProduct extends Product {
      * @param page number of pages in the book
      */
 
-    public BookProduct(String name, double price, int stock, String description, Category category, Color color,String author, int page,String imagePath) {
+    BookProduct(String name, double price, int stock, String description, Category category, Color color,String author, int page,String imagePath) {
         super(name, price, stock, description, category, color,imagePath);
         this.author = author;
         this.page = page;

@@ -152,6 +152,9 @@ public class ProductDetailsPanel extends JPanel {
 
             if (currentProduct.getStock() <= 0) {
                 showOutOfStockMessage();
+            } else {
+            statusLabel.setVisible(false);
+            statusLabel.setText("");
             }
         }
     }

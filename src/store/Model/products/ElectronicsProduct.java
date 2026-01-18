@@ -28,7 +28,7 @@ public class ElectronicsProduct extends Product{
      * @param warrantMonths warranty length in months
      * @param brand brand name
      */
-    public  ElectronicsProduct(String name, double price, int stock, String description, Category category, Color color,int warrantMonths, String brand,String imagePath) {
+    ElectronicsProduct(String name, double price, int stock, String description, Category category, Color color,int warrantMonths, String brand,String imagePath) {
         super(name, price, stock, description, category, color,imagePath);
         this.warrantMonths = warrantMonths;
         this.brand = brand;
